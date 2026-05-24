@@ -1,0 +1,297 @@
+/* ============================================================
+   Platonian's School Assets — v10.20 styles
+   Loaded LAST. Additive only. Covers:
+     1. Right-size modal buttons (Cancel/confirm) — the box was
+        far bigger than the text. Tighter, balanced sizing.
+     2. Reject-reason modal field styling.
+     3. Login page on mobile: no vertical scroll, no trailing
+        white strip. Hero is compacted so the card fits one screen.
+   ============================================================ */
+
+/* ── 1. MODAL ACTION BUTTONS: RIGHT-SIZED ─────────────────── */
+/* The confirm modal forced min-width:92px on top of the base
+   button padding, so "Cancel" sat in an oversized pill. Trim the
+   min-width and normalize padding + line-height so the box hugs
+   the label. */
+.ims-confirm-actions {
+  gap: 0.5rem;
+}
+.ims-confirm-actions .btn {
+  min-width: 0;            /* was 92px — let the label define width */
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  line-height: 1.1;
+  border-radius: 8px;
+}
+
+/* Cancel / secondary specifically: the 1px outline used to read as
+   "too thick" against the small label. Keep it crisp and snug. */
+.ims-confirm-actions .btn-secondary {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--gray-200, #e5e7eb);
+}
+html.dark .ims-confirm-actions .btn-secondary {
+  background: transparent;
+  color: var(--ink, #cbd5e1);
+  border: 1px solid rgba(148, 163, 184, 0.32);
+}
+html.dark .ims-confirm-actions .btn-secondary:hover {
+  background: rgba(148, 163, 184, 0.12);
+  border-color: rgba(148, 163, 184, 0.5);
+}
+/* The primary / danger confirm buttons should have a matching solid
+   edge so the two buttons read as a balanced pair, not one bordered
+   + one borderless. */
+.ims-confirm-actions .btn-primary {
+  border: 1px solid var(--blue-btn, #0d9488);
+}
+.ims-confirm-actions .btn-danger {
+  background: #dc2626;
+  color: #fff;
+  border: 1px solid #dc2626;
+}
+.ims-confirm-actions .btn-danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+/* ── TABLE ACTION BUTTONS: CRISP, EVEN BORDERS ───────────────── */
+/* In the Pending Borrow Requests table the Approve (teal) button had
+   no border while Reject (red) had a soft pink one, so the pair looked
+   mismatched. Give both a solid 1px edge in the same hue as their fill
+   in both light and dark themes. */
+.action-cell .btn-primary {
+  background: var(--blue-btn, #0d9488);
+  color: #fff;
+  border: 1px solid var(--blue-btn, #0d9488);
+}
+.action-cell .btn-primary:hover {
+  background: #0f766e;
+  border-color: #0f766e;
+}
+.action-cell .btn-danger {
+  background: #dc2626;
+  color: #fff;
+  border: 1px solid #dc2626;
+}
+.action-cell .btn-danger:hover {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+html.dark .action-cell .btn-primary {
+  background: #0d9488;
+  border-color: #0d9488;
+  color: #fff;
+}
+html.dark .action-cell .btn-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+/* Remove the default focus outline jump — use a soft ring instead so
+   keyboard focus is visible without the harsh browser outline. */
+.action-cell .btn:focus-visible,
+.ims-confirm-actions .btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.28);
+}
+.ims-confirm-actions .btn-danger:focus-visible,
+.action-cell .btn-danger:focus-visible {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.28);
+}
+
+/* Reject-reason modal's own button row inherits the same sizing. */
+#ims-reject-backdrop .ims-confirm-actions .btn {
+  min-width: 0;
+  padding: 0.5rem 1rem;
+}
+
+/* ── 1b. GLOBAL: tame oversized button outlines/backgrounds ──── */
+/* Anywhere a .btn wraps only a short label, the box should hug the
+   text. These are gentle, safe caps that do not affect icon+label
+   buttons (they keep their inline-flex gap). */
+.btn {
+  line-height: 1.1;
+}
+.btn-sm {
+  padding: 0.3rem 0.6rem;
+  line-height: 1.05;
+}
+
+/* The Show/Hide password pill in auth forms was a touch tall. */
+.pw-toggle {
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+/* ── 2. REJECT-REASON FIELD ───────────────────────────────── */
+.ims-reject-field {
+  margin: 0 0 1.1rem;
+  text-align: left;
+}
+.ims-reject-field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gray-700, #374151);
+  margin-bottom: 0.35rem;
+}
+html.dark .ims-reject-field label { color: var(--ink, #cbd5e1); }
+.ims-reject-field textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 64px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--gray-200, #e5e7eb);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--gray-900, #111827);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ims-reject-field textarea:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.14);
+}
+html.dark .ims-reject-field textarea {
+  background: var(--surface-card-2, #1e293b);
+  color: var(--ink-strong, #f1f5f9);
+  border-color: var(--border-strong, rgba(148, 163, 184, 0.3));
+}
+
+/* ── 3. LOGIN PAGE — MOBILE: NO SCROLL, NO WHITE STRIP ──────── */
+/* On phones the stacked hero + auth card overflowed the viewport,
+   so the page scrolled and the body background showed below the
+   content as a white/mint strip. We:
+     - use dynamic viewport height so browser-chrome resize never
+       leaves a gap,
+     - align content to the top (not center) so a slightly tall
+       card never gets its edges clipped,
+     - compact the hero (smaller logo, hide the marketing subtext
+       and the stat boxes) so everything fits on one screen,
+     - paint the page background onto the html element too so there
+       is never an unpainted strip even if a rubber-band scroll
+       occurs. */
+@media (max-width: 760px) {
+  html {
+    background: #0a5c52;
+  }
+  #login-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    /* Center when the content fits; if it ever exceeds the viewport
+       (older/larger fonts), safe-center + auto scroll keeps the top
+       reachable instead of clipping it. */
+    align-items: safe center;
+    justify-content: center;
+    padding: 1.25rem 1rem;
+    overflow-y: auto;
+  }
+  .login-container {
+    gap: 1.1rem;
+  }
+  /* Compact hero so the card is reachable without scrolling. */
+  .login-logo { margin-bottom: 1rem; }
+  .login-logo .site-logo-img { width: 48px; height: 48px; }
+  .login-logo-text h1 { font-size: 1.45rem; }
+  .login-logo-text p  { font-size: 0.82rem; }
+  .login-headline {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  /* Keep the logo, headline and yellow tagline visible on phones —
+     they are the brand identity. Only the decorative stat boxes are
+     dropped to keep the form above the fold. */
+  .login-subtext {
+    display: block;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin-bottom: 0.9rem;
+  }
+  .login-stats   { display: none; }
+}
+
+/* Very small phones: tighten further so even the smallest screens
+   show the whole sign-in card without scrolling. */
+@media (max-width: 480px) {
+  #login-page { padding: 1rem 0.85rem; }
+  .login-logo { margin-bottom: 0.75rem; }
+  .login-headline { font-size: 1.3rem; }
+  .login-card { padding: 1.35rem 1.15rem; }
+  .login-card h2 { font-size: 1.3rem; }
+  .login-card .sub { margin-bottom: 1.1rem; }
+  .form-group { margin-bottom: 0.95rem; }
+}
+
+/* ── LANDSCAPE PHONES — KEEP THE HERO, JUST COMPACT IT ──────── */
+/* Short-but-wide viewports (phone held sideways). The old rule
+   hid .login-left entirely, so the logo, tagline and yellow
+   subtext vanished and ONLY the card showed. Instead we keep the
+   two-column layout, shrink the hero so both fit, and allow the
+   page to scroll if the card is taller than the viewport so the
+   Sign In button is never clipped. Targets landscape orientation
+   on short screens regardless of width. */
+@media (orientation: landscape) and (max-height: 520px) {
+  html { background: #0a5c52; }
+  #login-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: safe center;     /* scroll instead of clipping a tall card */
+    justify-content: center;
+    padding: 1rem 1.25rem;
+    overflow-y: auto;
+  }
+  .login-container {
+    flex-direction: row;          /* keep hero beside the card */
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  /* Hero stays visible but tightened so it fits the short height. */
+  .login-left {
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 420px;
+  }
+  .login-logo { margin-bottom: 0.85rem; }
+  .login-logo .site-logo-img { width: 44px; height: 44px; }
+  .login-logo-text h1 { font-size: 1.25rem; }
+  .login-logo-text p  { font-size: 0.78rem; }
+  .login-headline {
+    font-size: 1.35rem;
+    margin-bottom: 0.45rem;
+  }
+  /* Yellow tagline stays — just smaller and with a tighter margin. */
+  .login-subtext {
+    display: block;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    margin-bottom: 0.85rem;
+  }
+  /* Stat boxes are the only truly optional bit on a short screen. */
+  .login-stats { display: none; }
+  .login-card {
+    flex: 0 0 auto;
+    width: min(380px, 52%);
+    padding: 1.35rem 1.4rem;
+    max-height: none;             /* never crop the card */
+  }
+  .login-card h2 { font-size: 1.3rem; }
+  .login-card .sub { margin-bottom: 1rem; }
+  .form-group { margin-bottom: 0.85rem; }
+}
+
+/* Extremely short landscape (older small phones): if the row layout
+   can't fit, fall back to stacking but STILL show the hero (compacted),
+   with the page scrollable. */
+@media (orientation: landscape) and (max-height: 380px) {
+  .login-container { flex-direction: row; gap: 1.1rem; }
+  .login-headline { display: none; }   /* keep logo + yellow subtext, drop the big headline */
+  .login-left { max-width: 340px; }
+  .login-card { width: min(360px, 55%); padding: 1.15rem 1.2rem; }
+}

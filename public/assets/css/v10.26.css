@@ -1,0 +1,84 @@
+/* ============================================================
+   Platonian's IS - v10.26 styles
+   - FIX: Room Audit (and all searchable-select) suggestion
+     dropdowns were rendering with a near-white panel and pale
+     grey option text in dark mode, making the room names almost
+     unreadable. The dark tokens existed but the light-mode
+     ".suggest-box { background:#fff }" / ".suggest-name { color:
+     var(--gray-800) }" base rules were winning in some render
+     paths.
+   - This file loads LAST, so it is the final word. It force-paints
+     the whole suggestion dropdown for dark mode with !important and
+     covers both html.dark and body.dark so it cannot be overridden
+     or leak the light theme.
+   ============================================================ */
+
+/* --- Dark mode: suggestion dropdown panel --------------------- */
+html.dark .suggest-box,
+body.dark .suggest-box {
+  background: var(--surface-elevated, #182238) !important;
+  border: 1px solid var(--border, #1f2a44) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Each suggestion row */
+html.dark .suggest-item,
+body.dark .suggest-item {
+  background: transparent !important;
+  border-bottom: 1px solid var(--border, #1f2a44) !important;
+  color: var(--ink-strong, #f1f5f9) !important;
+}
+html.dark .suggest-item:last-child,
+body.dark .suggest-item:last-child {
+  border-bottom: none !important;
+}
+html.dark .suggest-item:hover,
+body.dark .suggest-item:hover {
+  background: var(--accent-soft, rgba(45, 212, 191, 0.16)) !important;
+}
+
+/* The room / location name text — the bit that was washing out */
+html.dark .suggest-item .suggest-name,
+body.dark .suggest-item .suggest-name,
+html.dark .suggest-name,
+body.dark .suggest-name {
+  color: var(--ink-strong, #f1f5f9) !important;
+}
+
+/* Secondary / meta text and the empty-state line */
+html.dark .suggest-meta,
+body.dark .suggest-meta,
+html.dark .suggest-empty,
+body.dark .suggest-empty {
+  color: var(--ink-soft, #94a3b8) !important;
+}
+
+/* Keep the search input itself readable in dark mode too */
+html.dark .searchable-select-input,
+body.dark .searchable-select-input,
+html.dark .room-audit-toolbar .field-input,
+body.dark .room-audit-toolbar .field-input {
+  background: var(--surface-input, #0f1a2b) !important;
+  color: var(--ink-strong, #f1f5f9) !important;
+  border-color: var(--border-input, #243049) !important;
+}
+html.dark .searchable-select-input::placeholder,
+body.dark .searchable-select-input::placeholder {
+  color: var(--ink-muted, #64748b) !important;
+  opacity: 1;
+}
+
+/* Scrollbar inside the dropdown, so it doesn't show a light track */
+html.dark .suggest-box::-webkit-scrollbar,
+body.dark .suggest-box::-webkit-scrollbar {
+  width: 10px;
+}
+html.dark .suggest-box::-webkit-scrollbar-track,
+body.dark .suggest-box::-webkit-scrollbar-track {
+  background: var(--surface-elevated, #182238);
+}
+html.dark .suggest-box::-webkit-scrollbar-thumb,
+body.dark .suggest-box::-webkit-scrollbar-thumb {
+  background: var(--border-strong, #2c3a5a);
+  border-radius: 6px;
+}

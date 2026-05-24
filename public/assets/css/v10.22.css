@@ -1,0 +1,268 @@
+/* ============================================================
+   Platonian's School Assets - v10.22 styles
+   Loaded LAST (after v10.21). Additive overrides only.
+
+   This round:
+     1. File-count chip in the inventory table (View column + IAR
+        File column removed; attachments now live in Details).
+     2. Details panel: neat multi-file TILE GALLERY + description.
+     3. Asset form: multi-file UPLOAD PREVIEW tiles (image thumbs,
+        PDF/file icons) with per-file remove buttons.
+     4. Set-limit MODAL (replaces the native window.prompt()
+        "localhost says" box).
+     5. Location manage-list reuses .cat-list-item (no new CSS).
+     6. MOBILE: kill the big empty gap at the bottom of the page.
+   ============================================================ */
+
+/* ── 1. FILE COUNT CHIP (table) ───────────────────────────── */
+.file-count-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ink-soft, #64748b);
+  background: var(--surface-card-2, #f1f5f9);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  margin-left: 0.35rem;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* ── 2. DETAILS DESCRIPTION + FILE TILE GALLERY ───────────── */
+.details-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-strong, #1e293b);
+  background: var(--surface-card-2, #f8fafc);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 9px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.4rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.file-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+}
+.file-tile {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface-card-2, #f8fafc);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.file-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  border-color: var(--blue-btn, #0d9488);
+}
+.file-tile-media {
+  width: 100%;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  overflow: hidden;
+}
+html.dark .file-tile-media { background: #1f2937; }
+.file-tile-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.file-tile-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 1.8rem;
+  color: var(--ink-soft, #64748b);
+}
+.file-tile-icon span {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.file-tile-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.66rem;
+  color: var(--ink-soft, #64748b);
+  padding: 0.4rem 0.5rem;
+  border-top: 1px solid var(--border, #e2e8f0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── 3. FORM UPLOAD PREVIEW TILES ─────────────────────────── */
+.upload-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.6rem;
+  margin-top: 0.65rem;
+}
+.upload-preview-grid:empty { display: none; }
+.upload-tile {
+  position: relative;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface-card-2, #f8fafc);
+  aspect-ratio: 1 / 1;
+}
+.upload-tile-media {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+html.dark .upload-tile-media { background: #1f2937; }
+.upload-tile-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.upload-tile .file-tile-icon { font-size: 1.6rem; }
+.upload-tile-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(220, 38, 38, 0.92);
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: background 0.12s;
+}
+.upload-tile-remove:hover { background: #b91c1c; }
+.upload-tile-new {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: var(--blue-btn, #0d9488);
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+}
+
+/* ── 4. SET-LIMIT MODAL ───────────────────────────────────── */
+/* Reuses the .details-modal backdrop (fixed, dim, centered). */
+.setlimit-box {
+  background: var(--surface-card, #fff);
+  color: var(--ink, #1e293b);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 14px;
+  width: min(420px, 92vw);
+  box-shadow: var(--shadow-pop, 0 18px 50px rgba(0, 0, 0, 0.25));
+  overflow: hidden;
+  animation: detailsSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.setlimit-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  background: var(--surface-card-2, #f8fafc);
+}
+.setlimit-icon {
+  font-size: 1.4rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+}
+html.dark .setlimit-icon { background: rgba(249, 115, 22, 0.15); border-color: rgba(249, 115, 22, 0.4); }
+.setlimit-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink-strong, #0f172a);
+}
+.setlimit-sub {
+  font-size: 0.8rem;
+  color: var(--ink-soft, #64748b);
+  margin-top: 0.1rem;
+}
+.setlimit-body { padding: 1.1rem 1.25rem 0.5rem; }
+.setlimit-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--ink-soft, #64748b);
+  margin-bottom: 0.9rem;
+}
+.setlimit-meta strong { color: var(--ink-strong, #0f172a); }
+.setlimit-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink, #334155);
+  margin-bottom: 0.35rem;
+}
+.setlimit-label span { color: var(--ink-soft, #94a3b8); font-weight: 400; }
+.setlimit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+/* ── 6. MOBILE: REMOVE BOTTOM GAP ─────────────────────────── */
+/* The .app-layout was forced to min-height:100dvh as a flex column
+   with .main-content flex:1, so on short pages the content stretched
+   and left a dead strip below the last card. Let height be driven by
+   content instead, and trim the bottom padding to exactly clear the
+   floating bottom-nav (no extra). */
+@media (max-width: 760px) {
+  .app-layout {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto !important;
+  }
+  .main-content {
+    flex: 0 0 auto !important;   /* don't stretch to fill leftover height */
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  /* Belt-and-braces: nothing should add height below the main content. */
+  body[data-page="inventory"] { overflow-x: hidden; }
+}
+@media (max-width: 380px) {
+  .main-content {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}

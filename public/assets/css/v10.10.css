@@ -1,0 +1,345 @@
+/* ============================================================
+   Platonian's IS — v10.10 Stylesheet
+   Loaded LAST, after v10.9.css. Fixes from defense feedback:
+
+     1. Quick Actions trigger — proper vertical alignment with
+        the "Reports" page title; trigger contrast in dark mode;
+        popover z-index above the table.
+     2. Dark mode polish — buttons, filter chips, action cells
+        properly themed (no more "white-on-dark" glow).
+     3. Reset Requests on Users page — pull in the proper card
+        grid styling so Approved / Denied entries render as
+        cards instead of a wall of text.
+     4. Filter-select (sorting dropdowns) — kill the duplicate
+        chevron caused by the native browser arrow leaking
+        through `appearance: none`.
+     5. Confirmation modal — shared styles for the IMS.confirm()
+        dialog used by v10.10.js.
+   ============================================================ */
+
+
+/* ============================================================
+   1. QUICK ACTIONS — TRIGGER ALIGNMENT + DARK MODE
+   ============================================================ */
+
+/* Force the topbar to evenly center its children so the
+   Quick Actions trigger lines up with the page title. The
+   previous size was 0.5rem padding which fell short of the
+   theme/notif buttons' visual weight. */
+.qa-trigger {
+  height: 36px;
+  padding: 0 0.9rem !important;
+  line-height: 1;
+  align-self: center;
+  box-shadow: 0 2px 6px -2px rgba(13, 148, 136, 0.35);
+}
+
+/* Make the icon cluster (theme, notif, avatar) and the
+   Quick Actions trigger share the same vertical centerline. */
+.topbar-right {
+  align-items: center !important;
+}
+
+/* Dark-mode trigger: stronger contrast on dark surfaces. The
+   default teal #0d9488 on a near-black topbar reads OK but the
+   accent is a touch dim. Use the brighter teal we already use
+   for accent strokes in dark mode. */
+html.dark .qa-trigger {
+  background: #14b8a6;
+  border-color: #14b8a6;
+  color: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(45, 212, 191, 0.45);
+}
+html.dark .qa-trigger:hover {
+  background: #0d9488;
+  border-color: #0d9488;
+  box-shadow: 0 4px 14px -4px rgba(45, 212, 191, 0.6);
+}
+html.dark .qa-trigger-count {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* Popover must sit ABOVE the page table (z-index in v10.9
+   was 200 but the panel-card layer in dark mode created a
+   stacking context that swallowed it). */
+.qa-popover {
+  z-index: 1200 !important;
+}
+
+
+/* ============================================================
+   2. DARK MODE BUTTON OPTIMIZATIONS
+   The btn-secondary and btn-danger in dark mode were either
+   too low-contrast (gray on near-gray) or had a stray bright
+   border. Tighten these so the call-to-action buttons read
+   clearly against the dark surface.
+   ============================================================ */
+html.dark .btn-secondary {
+  background: var(--surface-2, #1e293b);
+  color: var(--ink-strong, #f1f5f9);
+  border-color: var(--border, rgba(148, 163, 184, 0.25));
+}
+html.dark .btn-secondary:hover {
+  background: var(--surface-card-2, #283449);
+  border-color: rgba(45, 212, 191, 0.45);
+  color: #2dd4bf;
+}
+
+html.dark .btn-primary {
+  background: #0d9488;
+  border-color: #0d9488;
+  color: #ffffff;
+}
+html.dark .btn-primary:hover {
+  background: #14b8a6;
+  border-color: #14b8a6;
+}
+
+html.dark .btn-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+html.dark .btn-danger:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+}
+
+/* btn-sm contrast inside action cells (Approve / Reject /
+   Deny / etc.) */
+html.dark .btn-sm {
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   3. RESET-TABS DARK MODE BUG
+   In dark mode, the active tab had the same background as
+   the surrounding rail because v10.9 set it to var(--surface)
+   which collapses to the same color in some themes. Use a
+   stronger fill plus a small bottom-bar accent so the active
+   state is obvious.
+   ============================================================ */
+html.dark .reset-tabs {
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(45, 212, 191, 0.18);
+}
+html.dark .reset-tab {
+  color: rgba(203, 213, 225, 0.72);
+}
+html.dark .reset-tab:hover {
+  background: rgba(45, 212, 191, 0.08);
+  color: #e2e8f0;
+}
+html.dark .reset-tab.active {
+  background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%);
+  color: #ffffff;
+  box-shadow: 0 2px 8px -2px rgba(45, 212, 191, 0.45);
+}
+
+
+/* ============================================================
+   4. FILTER-SELECT — KILL THE DUPLICATE CHEVRON
+   On Chromium-based browsers (Brave, Chrome, Edge), some
+   versions ignore `appearance: none` on <select> when the
+   element is INSIDE a flex container with overflow. The
+   native arrow re-emerges and stacks behind our custom SVG,
+   producing the "many chevrons" you see in screenshots.
+   Use the full reset chain plus an extra right-padding so
+   the custom arrow is the only one ever visible.
+   ============================================================ */
+.filter-select,
+select.filter-select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  /* Hides the native arrow on Firefox via a tiny inset */
+  text-indent: 0.01px;
+  text-overflow: "";
+  /* Extra right pad so the custom chevron has room */
+  padding-right: 2.25rem !important;
+}
+
+/* IE / Edge legacy fallback (won't hurt modern browsers) */
+.filter-select::-ms-expand,
+select.filter-select::-ms-expand {
+  display: none !important;
+}
+
+/* In some Brave builds the focus state revives the arrow.
+   Force the background-image to win on focus too. */
+.filter-select:focus,
+.filter-select:focus-visible {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.55rem center !important;
+  background-size: 14px 14px !important;
+}
+html.dark .filter-select:focus,
+html.dark .filter-select:focus-visible {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232dd4bf' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") !important;
+}
+
+/* Make the option list readable on dark in Firefox/Safari */
+html.dark .filter-select option {
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+
+/* ============================================================
+   5. SHARED CONFIRMATION MODAL
+   Used by IMS.confirm() (added in v10.10.js). Lightweight,
+   accessible, theme-aware. Replaces the browser-native
+   confirm() dialog for destructive / important actions.
+   ============================================================ */
+.ims-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+  padding: 1rem;
+}
+.ims-confirm-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.ims-confirm-box {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.5rem 1.5rem 1.25rem;
+  max-width: 440px;
+  width: 100%;
+  box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.35),
+              0 4px 12px rgba(15, 23, 42, 0.1);
+  transform: translateY(-12px) scale(0.96);
+  opacity: 0;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.18s ease;
+}
+.ims-confirm-backdrop.open .ims-confirm-box {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+html.dark .ims-confirm-box {
+  background: var(--surface, #1e293b);
+  color: var(--ink-strong, #f1f5f9);
+  border: 1px solid var(--border, rgba(148, 163, 184, 0.2));
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+}
+
+.ims-confirm-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+.ims-confirm-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 148, 136, 0.12);
+  color: #0d9488;
+}
+.ims-confirm-icon.danger {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+}
+.ims-confirm-icon.warn {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+html.dark .ims-confirm-icon       { background: rgba(45, 212, 191, 0.16); color: #2dd4bf; }
+html.dark .ims-confirm-icon.danger{ background: rgba(248, 113, 113, 0.18); color: #f87171; }
+html.dark .ims-confirm-icon.warn  { background: rgba(251, 191, 36, 0.18); color: #fbbf24; }
+
+.ims-confirm-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--gray-900, #111827);
+  line-height: 1.3;
+}
+html.dark .ims-confirm-title { color: var(--ink-strong, #f1f5f9); }
+
+.ims-confirm-message {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--gray-700, #374151);
+  margin-bottom: 1.25rem;
+  word-wrap: break-word;
+}
+html.dark .ims-confirm-message { color: var(--ink, #cbd5e1); }
+
+.ims-confirm-message strong {
+  color: var(--gray-900, #111827);
+  font-weight: 700;
+}
+html.dark .ims-confirm-message strong { color: var(--ink-strong, #f1f5f9); }
+
+.ims-confirm-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.ims-confirm-actions .btn {
+  min-width: 92px;
+}
+
+/* On very narrow screens, stack the buttons full-width */
+@media (max-width: 460px) {
+  .ims-confirm-actions { flex-direction: column-reverse; }
+  .ims-confirm-actions .btn { width: 100%; }
+}
+
+
+/* ============================================================
+   6. PANEL-CARD ACTION CELL FIXES (DARK MODE)
+   The action cells in the borrow-request table sometimes
+   rendered Approve/Reject buttons with low contrast. Lock
+   the dark variant in.
+   ============================================================ */
+html.dark .action-cell .btn-primary,
+html.dark .rr-actions .btn-primary {
+  background: #0d9488;
+  border-color: #0d9488;
+  color: #ffffff;
+}
+html.dark .action-cell .btn-danger,
+html.dark .rr-actions .btn-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
+/* The "Update Password" button stays teal in dark too */
+html.dark #change-password-submit {
+  background: #0d9488;
+  border-color: #0d9488;
+  color: #ffffff;
+}
+html.dark #change-password-submit:hover {
+  background: #14b8a6;
+  border-color: #14b8a6;
+}
+
+/* Toolbar-row right-aligned controls on the transactions
+   page (filter chip) — make sure they don't overflow */
+.toolbar-row .toolbar-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}

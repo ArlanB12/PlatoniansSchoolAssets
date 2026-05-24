@@ -1,0 +1,438 @@
+/* ============================================================
+   Platonian's IS — v10.11 Stylesheet
+   Loaded LAST, after v10.10.css. Round-two fixes:
+
+     1. Root-cause patch: --surface and --surface-2 CSS vars
+        were referenced 17+ times across reset-v10.3.css and
+        v10.9.css but NEVER DEFINED. This caused multiple
+        "transparent in dark mode" bugs (popovers, modals,
+        filter-selects, cards). Defining them once fixes
+        all downstream uses.
+
+     2. Filter-select chevron: replace background-image
+        approach with a sibling overlay so duplicate-chevron
+        rendering glitches are impossible.
+
+     3. Search bar wrapper dark mode (users.html search
+        was bright white because only the input was themed,
+        not the .search-input wrapper).
+
+     4. Lending Policy banner — defeat the inline styles on
+        borrow.html so dark mode actually applies.
+
+     5. Toolbar-row alignment — vertical center fix for the
+        Transaction History table header vs filter chip.
+
+     6. Quick Actions trigger — tighter vertical centering
+        so it lines up exactly with the page title.
+
+     7. Confirmation toast styles (used by v10.11.js when a
+        borrow request submits, an asset is added, etc.).
+   ============================================================ */
+
+
+/* ============================================================
+   1. ROOT-CAUSE PATCH — DEFINE MISSING CSS VARIABLES
+   These variables are referenced in:
+     - reset-v10.3.css   (modal, cards, tabs, badges)
+     - v10.9.css         (quick actions popover, filter-select)
+   Without these definitions, dark-mode backgrounds collapsed
+   to transparent, which is why the Approve Reset modal looked
+   "see-through" and the Quick Actions popover showed table
+   text bleeding through.
+   ============================================================ */
+:root {
+  --surface:        #ffffff;
+  --surface-2:      #f8fafc;
+  --ink:            #1f2937;
+  --ink-strong:     #111827;
+  --ink-soft:       #6b7280;
+  --ink-muted:      #9ca3af;
+  --border:         #e5e7eb;
+  --accent:         #0d9488;
+  --navy:           #0f172a;
+}
+
+html.dark {
+  --surface:        #111827;
+  --surface-2:      #0f1a2b;
+  --ink:            #cbd5e1;
+  --ink-strong:     #f1f5f9;
+  --ink-soft:       #94a3b8;
+  --ink-muted:      #64748b;
+  --border:         rgba(148, 163, 184, 0.22);
+  --accent:         #14b8a6;
+  --navy:           #e2e8f0;
+}
+
+
+/* ============================================================
+   2. QUICK ACTIONS POPOVER — LOCK SOLID BACKGROUND
+   Even with --surface defined, lock in the dark-mode popover
+   to a known opaque color so it never inherits transparency
+   from a parent stacking context.
+   ============================================================ */
+html.dark .qa-popover {
+  background: #111827 !important;
+  border: 1px solid rgba(45, 212, 191, 0.22);
+  box-shadow:
+    0 12px 28px -8px rgba(0, 0, 0, 0.7),
+    0 2px 6px rgba(0, 0, 0, 0.45);
+}
+html.dark .qa-popover .qa-item {
+  color: #e2e8f0;
+}
+html.dark .qa-popover .qa-item:hover,
+html.dark .qa-popover .qa-item:focus-visible {
+  background: rgba(45, 212, 191, 0.12);
+  color: #f8fafc;
+}
+html.dark .qa-popover-title {
+  color: #94a3b8;
+}
+
+/* Trigger fine-tuning: line up exactly with the topbar title
+   baseline. The topbar is 60px tall, the title sits at the
+   visual center, and the trigger button at 36px height
+   centers naturally. Force align-self center to nail it. */
+.qa-trigger {
+  align-self: center !important;
+  margin: 0 !important;
+}
+
+
+/* ============================================================
+   3. FILTER-SELECT — SIBLING-OVERLAY CHEVRON APPROACH
+   v10.10 tried to neutralise the duplicate chevron via
+   appearance:none. Some Chromium / Brave builds keep
+   redrawing the native arrow regardless (and the background-
+   image SVG seems to render once at first paint, then again
+   on focus, producing the stacked-chevron look reported).
+
+   New approach: hide the chevron in the <select> itself
+   (no background-image at all) and instead wrap the select
+   in a .filter-select-wrap (added by v10.11.js) which has
+   an absolutely-positioned ::after chevron. The select can
+   never duplicate something it doesn't have.
+   ============================================================ */
+.filter-select,
+select.filter-select {
+  background-image: none !important;
+  padding-right: 2.25rem !important;
+}
+
+.filter-select-wrap {
+  position: relative;
+  display: inline-block;
+}
+.filter-select-wrap > select.filter-select {
+  width: 100%;
+  /* Keep the existing border/bg from v10.9.css */
+}
+.filter-select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 0.7rem;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  pointer-events: none;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+  background-position: center;
+  transition: transform 0.15s ease;
+}
+html.dark .filter-select-wrap::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232dd4bf' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+}
+
+/* Dark-mode: re-assert filter-select background since
+   it was using the broken var(--surface) before our patch */
+html.dark .filter-select {
+  background-color: #0f1a2b !important;
+  color: #f1f5f9 !important;
+}
+html.dark .filter-select option {
+  background-color: #0f1a2b;
+  color: #f1f5f9;
+}
+
+
+/* ============================================================
+   4. SEARCH-INPUT WRAPPER DARK MODE
+   The .search-input wrapper had background:white from base
+   styles.css. Dark-mode rules only ever themed the inner
+   <input>. Result: bright-white pill containing dark text on
+   the Users page in dark mode.
+   ============================================================ */
+html.dark .search-input {
+  background: #0f1a2b !important;
+  border-color: rgba(148, 163, 184, 0.22) !important;
+}
+html.dark .search-input input {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+}
+html.dark .search-input input::placeholder {
+  color: #94a3b8 !important;
+}
+
+
+/* ============================================================
+   5. LENDING POLICY BANNER — CLASS-BASED, DARK-MODE AWARE
+   The inline-style approach in v10.10 borrow.html made
+   dark-mode override impossible. v10.11 moves the banner
+   to a class. These rules style both light and dark.
+   ============================================================ */
+.lending-policy-banner {
+  background: #f0fdfa;
+  border: 1px solid #99f6e4;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+.lending-policy-banner .lending-policy-title {
+  color: #0f766e;
+  font-weight: 700;
+}
+.lending-policy-banner p {
+  margin: 0.4rem 0 0;
+  line-height: 1.55;
+  color: #1f2937;
+}
+.lending-policy-banner p.lending-late {
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+html.dark .lending-policy-banner {
+  background: #0f1a2b;
+  border-color: rgba(45, 212, 191, 0.3);
+  color: #cbd5e1;
+}
+html.dark .lending-policy-banner .lending-policy-title {
+  color: #2dd4bf;
+}
+html.dark .lending-policy-banner p {
+  color: #cbd5e1;
+}
+html.dark .lending-policy-banner p.lending-late {
+  color: #94a3b8;
+}
+
+/* Legacy: keep the old ID-based selector working too for any
+   page that hasn't been updated yet. */
+html.dark #lending-policy-banner {
+  background: #0f1a2b !important;
+  border-color: rgba(45, 212, 191, 0.3) !important;
+  color: #cbd5e1 !important;
+}
+html.dark #lending-policy-banner strong {
+  color: #2dd4bf !important;
+}
+html.dark #lending-policy-banner p {
+  color: #cbd5e1 !important;
+}
+html.dark #lending-policy-text,
+html.dark #lending-late-text {
+  color: #cbd5e1 !important;
+}
+
+
+/* ============================================================
+   6. TOOLBAR-ROW VERTICAL CENTER FIX
+   Transaction History Table title was sitting ~6px higher
+   than its filter chip on the same row. Force the row to
+   stretch and the children to center inside it.
+   ============================================================ */
+.toolbar-row {
+  align-items: center !important;
+  min-height: 40px;
+}
+.toolbar-row .table-info {
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+}
+.toolbar-row .toolbar-right {
+  align-items: center;
+}
+.toolbar-row .filter-select,
+.toolbar-row .filter-select-wrap > .filter-select {
+  align-self: center;
+}
+
+
+/* ============================================================
+   7. RESET-MODAL-BOX — FIX TRANSPARENT MODAL IN DARK MODE
+   The Approve Reset Request modal body used var(--surface)
+   which was undefined → transparent. Lock to opaque dark.
+   ============================================================ */
+html.dark .reset-modal-box {
+  background: #111827 !important;
+  border: 1px solid rgba(45, 212, 191, 0.22);
+  color: #f1f5f9;
+}
+html.dark .reset-modal-box .rmodal-sub,
+html.dark .reset-modal-box .rmodal-note {
+  color: #cbd5e1;
+}
+
+
+/* ============================================================
+   8. RESET REQUEST CARDS — FIX TRANSPARENT IN DARK
+   Same root cause as the modal.
+   ============================================================ */
+html.dark .reset-request-card {
+  background: #111827 !important;
+  border-color: rgba(45, 212, 191, 0.18) !important;
+}
+html.dark .rr-reason {
+  background: #0f1a2b !important;
+}
+
+
+/* ============================================================
+   9. SUCCESS / INFO TOAST
+   Used by v10.11.js to celebrate successful actions
+   (borrow request submitted, asset created, etc.).
+   ============================================================ */
+.ims-toast-host {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  max-width: calc(100vw - 2.5rem);
+}
+.ims-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: #ffffff;
+  color: #1f2937;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 28px -8px rgba(15, 23, 42, 0.35),
+              0 2px 6px rgba(15, 23, 42, 0.08);
+  border-left: 4px solid #0d9488;
+  min-width: 280px;
+  max-width: 420px;
+  pointer-events: auto;
+  transform: translateX(110%);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.18s ease;
+}
+.ims-toast.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+.ims-toast.success { border-left-color: #0d9488; }
+.ims-toast.error   { border-left-color: #dc2626; }
+.ims-toast.warn    { border-left-color: #d97706; }
+.ims-toast.info    { border-left-color: #2563eb; }
+
+.ims-toast-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: #0d9488;
+  margin-top: 1px;
+}
+.ims-toast.error .ims-toast-icon { color: #dc2626; }
+.ims-toast.warn  .ims-toast-icon { color: #d97706; }
+.ims-toast.info  .ims-toast-icon { color: #2563eb; }
+
+.ims-toast-body {
+  flex: 1;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.ims-toast-title {
+  font-weight: 700;
+  margin-bottom: 0.15rem;
+}
+.ims-toast-close {
+  background: transparent;
+  border: 0;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  margin-top: -2px;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.ims-toast-close:hover { color: #1f2937; }
+
+html.dark .ims-toast {
+  background: #111827;
+  color: #f1f5f9;
+  box-shadow: 0 10px 28px -8px rgba(0, 0, 0, 0.7),
+              0 2px 6px rgba(0, 0, 0, 0.4);
+}
+html.dark .ims-toast-close { color: #94a3b8; }
+html.dark .ims-toast-close:hover { color: #f1f5f9; }
+
+
+/* ============================================================
+   10. SUCCESS CELEBRATION MODAL
+   A taller, more visible confirmation modal for borrow
+   request submission specifically. Reuses the ims-confirm
+   structure but with a checkmark icon.
+   ============================================================ */
+.ims-confirm-icon.success {
+  background: rgba(13, 148, 136, 0.14);
+  color: #0d9488;
+}
+html.dark .ims-confirm-icon.success {
+  background: rgba(45, 212, 191, 0.18);
+  color: #2dd4bf;
+}
+
+
+/* ============================================================
+   11. LOGO RENDERING — KEEP CRISP AT SMALL SIZES
+   The sidebar logo source has been upgraded to a clean
+   512x512 PNG. Add image-rendering hints so the browser
+   uses high-quality downsampling.
+   ============================================================ */
+.site-logo-img,
+.sidebar-logo,
+.sidebar-brand img,
+img[alt*="Platonian"],
+img[src*="logo"] {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+/* On the login screen the logo is rendered larger; remove
+   the white tint overlay so the logo's own white background
+   reads cleanly. */
+.login-logo .site-logo-img {
+  background: #ffffff !important;
+}
+
+
+/* ============================================================
+   12. PANEL-CARD DARK MODE — STRENGTHEN BACKGROUND
+   Some panels were inheriting transparency or near-transparent
+   tones. Lock to a known surface in dark mode.
+   ============================================================ */
+html.dark .panel-card {
+  background: #111827;
+  border-color: rgba(148, 163, 184, 0.15);
+}
+html.dark .table-card {
+  background: transparent;
+}
+html.dark .table-info {
+  color: #f1f5f9;
+}

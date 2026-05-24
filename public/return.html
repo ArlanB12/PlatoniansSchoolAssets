@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platonian's School Assets - Return Item</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/v10.4.css">
+  <link rel="stylesheet" href="assets/css/v10.5.css">
+  <link rel="stylesheet" href="assets/css/v10.6.css">
+  <link rel="stylesheet" href="assets/css/v10.7.css">
+  <link rel="stylesheet" href="assets/css/v10.8.css">
+  <link rel="stylesheet" href="assets/css/v10.9.css">
+  <link rel="stylesheet" href="assets/css/v10.10.css">
+  <link rel="stylesheet" href="assets/css/v10.11.css">
+  <link rel="stylesheet" href="assets/css/v10.13.css">
+  <link rel="stylesheet" href="assets/css/v10.14.css">
+  <link rel="stylesheet" href="assets/css/v10.15.css">
+  <link rel="stylesheet" href="assets/css/v10.16.css">
+  <link rel="stylesheet" href="assets/css/v10.17.css">
+  <link rel="stylesheet" href="assets/css/v10.20.css">
+  <link rel="stylesheet" href="assets/css/v10.21.css">
+  <link rel="stylesheet" href="assets/css/v10.26.css">
+  <script>
+    // Apply persisted theme BEFORE first paint to avoid a flash of the wrong theme.
+    try {
+      var t = localStorage.getItem('platonian_theme') || 'light';
+      if (t === 'dark') document.documentElement.classList.add('dark');
+    } catch (e) {}
+  </script>
+</head>
+<body data-page="return">
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img src="assets/img/logo.png" alt="Platonian's School Assets logo" class="site-logo-img">
+        <div class="brand-text">
+          <div class="name">Platonian's School Assets</div>
+          <div class="sub">Inventory System</div>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sb-avatar">U</div>
+        <div class="user-info">
+          <div class="uname" id="sb-name">User</div>
+          <div class="urole" id="sb-role">Role</div>
+        </div>
+      </div>
+      <div class="nav-section">Navigation</div>
+      <nav id="sidebar-nav"></nav>
+      <div class="sidebar-logout">
+        <button class="logout-btn" id="logout-btn" aria-label="Log out">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Open menu">&#9776;</button>
+        <div class="topbar-title">
+          <div class="page-name" id="topbar-page">Return Item</div>
+          <div class="page-date" id="topbar-date"></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle theme-toggle-topbar" id="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg class="ti-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="ti-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <div class="notif-wrapper">
+        <button class="notif-btn" id="notif-bell-btn" type="button" aria-label="Notifications">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot" id="notif-dot" style="display:none;"></span>
+          <span class="notif-count-badge" id="notif-count-badge" style="display:none;"></span>
+        </button>
+        <div class="notif-dropdown" id="notif-dropdown" style="display:none;">
+          <div class="notif-header">
+            <span class="notif-header-title">Notifications</span>
+            <button class="notif-mark-all-btn" id="notif-mark-all-btn" type="button">Mark all read</button>
+          </div>
+          <div class="notif-list" id="notif-list">
+            <div class="notif-empty">No notifications yet.</div>
+          </div>
+        </div>
+      </div>
+        <div class="topbar-user">
+          <div class="user-avatar" id="tb-avatar">U</div>
+          <div>
+            <div class="ta" id="tb-name">User</div>
+            <div class="tr" id="tb-role">Role</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="panel-card">
+        <div class="section-label">Return Item</div>
+        <form id="teacher-return-form" class="form-grid">
+          <div class="form-field">
+            <label for="teacher-return-transaction-id">Transaction ID</label>
+            <select id="teacher-return-transaction-id" class="field-input" required></select>
+          </div>
+
+          <div class="form-field">
+            <label for="teacher-return-condition">Asset Condition</label>
+            <select id="teacher-return-condition" class="field-input" required>
+              <option value="Excellent">Excellent</option>
+              <option value="Very Good">Very Good</option>
+              <option value="Good" selected>Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Needs Repair">Needs Repair</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="teacher-return-date">Return Date</label>
+            <input id="teacher-return-date" class="field-input" type="date" required>
+          </div>
+
+          <div class="form-actions form-field-full">
+            <button type="submit" class="btn btn-primary">Submit Return</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel-card">
+        <div class="section-label">Borrowed Items Pending Return</div>
+        <div class="table-card">
+          <table id="teacher-pending-table">
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Asset ID</th>
+                <th>Quantity</th>
+                <th>Asset Name</th>
+                <th>Borrow Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="teacher-pending-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <div id="return-message" class="status-message" aria-live="polite"></div>
+    </main>
+  </div>
+
+    <script src="assets/js/theme.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/transactions.js"></script>
+  <script src="assets/js/entry.js"></script>
+  <script src="assets/js/v10.6.js"></script>
+  <script src="assets/js/v10.7.js"></script>
+  <script src="assets/js/v10.9.js"></script>
+  <script src="assets/js/v10.10.js"></script>
+  <script src="assets/js/v10.11.js"></script>
+  <script src="assets/js/v10.14.js"></script>
+  <script src="assets/js/v10.15.js"></script>
+  <script src="assets/js/v10.16.js"></script>
+  <script src="assets/js/v10.17.js"></script>
+  <script src="assets/js/v10.20.js"></script>
+  <script src="assets/js/v10.21.js"></script>
+</body>
+</html>

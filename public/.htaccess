@@ -1,0 +1,39 @@
+# ============================================================
+# Platonian's School Assets — public/ root .htaccess
+# ============================================================
+# Apache DocumentRoot points here. This file hardens the
+# document root: it disables directory listing, blocks access
+# to sensitive dotfiles and local config, and adds baseline
+# security headers.
+# ============================================================
+
+# No directory browsing
+Options -Indexes
+
+# Use index.html as the default document (login page)
+DirectoryIndex index.html
+
+# ── Block dotfiles (.htaccess, .git, etc.) ──────────────────
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+# ── Never serve local DB credentials ────────────────────────
+<FilesMatch "config\.local\.php$">
+  Require all denied
+</FilesMatch>
+
+# ── Baseline security headers ───────────────────────────────
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# ── Ensure the service worker is never cached aggressively ──
+<IfModule mod_headers.c>
+  <FilesMatch "sw\.js$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+</IfModule>

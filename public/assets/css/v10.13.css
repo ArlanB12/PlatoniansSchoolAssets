@@ -1,0 +1,104 @@
+/* ============================================================
+   Platonian's IS — v10.13 (CSS-only stable patch)
+
+   What this patch does (CSS ONLY — no JavaScript changes):
+     1. Mobile notifications dropdown — full-bleed sheet so
+        content doesn't overflow the viewport on phones.
+     2. Logo crispness — undo the v10.11 `crisp-edges` rule
+        that was disabling anti-aliasing on the sidebar logo.
+     3. "Got it" success modal — recolor the icon ring so it
+        no longer blends into the teal primary button.
+
+   What this patch deliberately does NOT touch:
+     - The infinite approve modal (v10.12.js attempted this
+       and broke teacher login; reverting to the v10.11
+       behavior is safer for now).
+     - Quick Actions visibility on Inventory (same reason).
+   ============================================================ */
+
+
+/* ============================================================
+   1. NOTIFICATIONS DROPDOWN — MOBILE
+   The old rules used negative right offsets which pushed the
+   panel partway off-screen. Replace with a centered sheet.
+   ============================================================ */
+@media (max-width: 600px) {
+  .notif-dropdown {
+    position: fixed !important;
+    top: 60px;
+    right: 0.5rem !important;
+    left: 0.5rem;
+    width: auto !important;
+    max-width: none;
+    max-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.25);
+    z-index: 950;
+  }
+  .notif-header {
+    flex-shrink: 0;
+    padding: 0.85rem 1rem;
+  }
+  .notif-list {
+    max-height: none;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .notif-item {
+    padding: 0.85rem 1rem;
+    gap: 0.7rem;
+  }
+  .notif-item .notif-title {
+    font-size: 0.86rem;
+    line-height: 1.35;
+  }
+  .notif-item .notif-msg {
+    font-size: 0.78rem;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  .notif-item .notif-time {
+    font-size: 0.7rem;
+  }
+  #notif-dot { display: none !important; }
+}
+
+
+/* ============================================================
+   2. LOGO RENDERING — UNDO `crisp-edges`
+   ============================================================ */
+.site-logo-img,
+.sidebar-logo,
+.sidebar-brand img,
+img[alt*="Platonian"],
+img[src*="logo"] {
+  image-rendering: auto !important;
+  -ms-interpolation-mode: bicubic;
+}
+
+.sidebar-brand .site-logo-img {
+  width: 52px;
+  height: 52px;
+  background: #ffffff;
+  padding: 1px;
+}
+
+
+/* ============================================================
+   3. SUCCESS MODAL — DISTINCT GREEN
+   ============================================================ */
+.ims-confirm-icon.success {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #059669 !important;
+}
+html.dark .ims-confirm-icon.success {
+  background: rgba(52, 211, 153, 0.18) !important;
+  color: #34d399 !important;
+}
+html.dark .ims-confirm-box {
+  background: #0f172a !important;
+  border: 1px solid rgba(148, 163, 184, 0.22) !important;
+}

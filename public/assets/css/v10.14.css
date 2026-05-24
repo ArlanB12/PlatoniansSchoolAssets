@@ -1,0 +1,210 @@
+/* ============================================================
+   Platonian's IS — v10.14 (CSS + scoped JS patch)
+   Loaded LAST, after v10.13.css.
+
+   Fixes:
+     1. TOPBAR ALIGNMENT — "Reports" title now sits on the
+        SAME horizontal centerline as Quick Actions / theme
+        toggle / notif bell / Admin user. The old reports-only
+        wrap rule (added back when there were 5 separate export
+        buttons) is no longer needed now that Quick Actions
+        collapses them into one trigger, so it forced a needless
+        second row. Killed it and locked vertical centering.
+
+     2. NOTIFICATIONS — MOBILE SCROLL. The dropdown list now
+        traps its own scroll (overscroll-behavior: contain) and
+        the body is locked while the panel is open (via the
+        .notif-open class added by v10.14.js). No more scrolling
+        the page behind the panel.
+   ============================================================ */
+
+
+/* ============================================================
+   1. TOPBAR — ONE ROW, VERTICALLY CENTERED (DESKTOP/TABLET)
+   ============================================================ */
+
+/* Always center the topbar's direct children on their row. */
+.topbar {
+  align-items: center !important;
+}
+.topbar-right {
+  align-items: center !important;
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* The page title block must center against the icon cluster,
+   not top-align. line-height kept tight so the two-line
+   title+date stays vertically balanced. */
+.topbar-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.topbar-title .page-name { line-height: 1.25; }
+.topbar-title .page-date { line-height: 1.2; }
+
+/* Kill the reports-only wrap at 1050px. With Quick Actions
+   collapsing the 5 export buttons into a single trigger, the
+   topbar fits on one line down to the 900px breakpoint, so
+   this rule only ever caused the misalignment in the
+   screenshot. Reset every property it set. */
+@media (max-width: 1050px) and (min-width: 901px) {
+  body[data-page="reports"] .topbar {
+    flex-wrap: nowrap;
+    height: var(--topbar-h);
+    padding: 0 1.5rem;
+    align-items: center;
+  }
+  body[data-page="reports"] .topbar-right {
+    width: auto;
+    margin-left: auto;
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+    margin-top: 0;
+  }
+  body[data-page="reports"] .topbar-right .btn {
+    font-size: 0.82rem;
+  }
+}
+
+
+/* ============================================================
+   2. TOPBAR — MOBILE (<=900px): KEEP TITLE + ACTIONS LEVEL
+   On phones the topbar genuinely needs two rows (title row,
+   then the icon cluster). Within each row, center vertically
+   so nothing floats high or low. The Quick Actions trigger,
+   theme toggle, notif bell and avatar all share one baseline.
+   ============================================================ */
+@media (max-width: 900px) {
+  .topbar {
+    align-items: center !important;
+    row-gap: 0.55rem;
+  }
+  .topbar-left {
+    align-items: center;
+  }
+  /* The right cluster sits on its own row but everything in
+     it lines up on a single centerline. */
+  .topbar-right {
+    align-items: center !important;
+    min-height: 40px;
+  }
+  .topbar-right > * {
+    align-self: center;
+  }
+  .topbar-right .theme-toggle,
+  .topbar-right .notif-btn {
+    align-self: center;
+  }
+  .topbar-user { align-self: center; }
+}
+
+/* In the 761–900px band the v10.9 Quick Actions trigger is
+   still shown in the topbar (v10.9 only hides it <=760px,
+   where the sidebar drawer takes over). Make sure it matches
+   the icon heights so the action row reads as perfectly level.
+   Below 760px we leave the drawer to handle actions — no QA
+   duplication. */
+@media (min-width: 761px) and (max-width: 900px) {
+  .qa-wrapper { display: inline-flex !important; }
+  .qa-trigger {
+    height: 36px;
+    align-self: center;
+  }
+}
+
+
+/* ============================================================
+   3. NOTIFICATIONS DROPDOWN — MOBILE SCROLL TRAP
+   v10.13 made the panel a fixed sheet but the inner list still
+   chained its scroll to the body. Trap it.
+   ============================================================ */
+.notif-list {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+@media (max-width: 600px) {
+  /* The fixed sheet from v10.13 — reassert and harden. */
+  .notif-dropdown {
+    position: fixed !important;
+    top: 64px;
+    right: 0.5rem !important;
+    left: 0.5rem;
+    width: auto !important;
+    max-width: none;
+    max-height: calc(100vh - 84px);
+    max-height: calc(100dvh - 84px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 14px;
+    box-shadow: 0 14px 44px rgba(15, 23, 42, 0.28);
+    z-index: 1300;
+  }
+  .notif-header { flex-shrink: 0; }
+  .notif-list {
+    flex: 1 1 auto;
+    min-height: 0;          /* allow the flex child to actually scroll */
+    max-height: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* When the panel is open, lock the page behind it so a swipe
+     scrolls the list, not the dashboard. The class is toggled
+     by v10.14.js. */
+  body.notif-open {
+    overflow: hidden;
+    touch-action: none;
+  }
+  /* The dropdown is position:fixed but lives inside .topbar,
+     whose own z-index (50) creates a stacking context. A
+     body-level backdrop would otherwise paint OVER the trapped
+     dropdown. Lift the whole topbar context above the backdrop
+     while the panel is open so the dropdown stays on top. */
+  body.notif-open .topbar {
+    z-index: 1310 !important;
+  }
+  /* Dim backdrop behind the sheet so it reads as a layer and
+     taps outside close it. Injected by v10.14.js. */
+  .notif-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    z-index: 1290;
+    opacity: 0;
+    transition: opacity 0.16s ease;
+  }
+  .notif-backdrop.show { opacity: 1; }
+}
+
+/* On slightly larger phones / small tablets the dropdown is
+   still anchored to the bell; just make sure the list scrolls
+   inside its own box rather than chaining. */
+@media (min-width: 601px) and (max-width: 900px) {
+  .notif-list {
+    max-height: min(60vh, 420px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+
+/* ============================================================
+   4. LOGO — KEEP THE v10.13 SMOOTH RENDER (don't regress)
+   v10.11 set image-rendering: crisp-edges which hard-pixelated
+   the downscaled logo; v10.13 undid it. Re-assert here in case
+   load order ever shifts.
+   ============================================================ */
+.site-logo-img,
+.sidebar-brand img,
+img[src*="logo"] {
+  image-rendering: auto !important;
+}

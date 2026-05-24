@@ -1,0 +1,813 @@
+/* ============================================================
+   Platonian's IS — v10.4 Stylesheet
+   Loaded AFTER styles.css and reset-v10.3.css so the rules
+   here override anything earlier (including the v10.3 dark
+   mode palette).
+   Contains:
+     1. Facebook-style dark mode token overrides
+     2. Account Settings page styles
+     3. Super-account toggle + badges
+     4. Forgot-password super-account success card
+     5. Item Details panel + modal
+     6. Inventory sorting toolbar
+     7. Read-only form styling (for principal view)
+   ============================================================ */
+
+/* ============================================================
+   1. FACEBOOK-STYLE DARK MODE
+   Overrides the v10.3 navy-tinged dark palette with Facebook's
+   grayscale tones. Same token names — every existing dark-mode
+   selector picks these up automatically.
+   ============================================================ */
+html.dark {
+  --surface-app:        #18191A;   /* page background — flat near-black */
+  --surface-card:       #242526;   /* solid cards / panels */
+  --surface-card-2:     #3A3B3C;   /* alt rows, hover, secondary */
+  --surface-input:      #3A3B3C;   /* form controls */
+  --surface-sidebar:    #242526;
+  --surface-topbar:     #242526;
+  --surface-elevated:   #4E4F50;   /* hover state on cards */
+  --surface-table-head: #2C2D2E;
+
+  --ink-strong:  #E4E6EB;
+  --ink:         #E4E6EB;
+  --ink-soft:    #B0B3B8;
+  --ink-muted:   #8A8D91;
+  --ink-inverse: #18191A;
+
+  --border:        #3E4042;
+  --border-strong: #4E4F50;
+  --border-input:  #4E4F50;
+
+  /* Keep the brand teal so the system stays recognizable, but
+     soften it for dark-mode contrast. */
+  --accent:        #2DD4BF;
+  --accent-hover:  #5EEAD4;
+  --accent-soft:   rgba(45, 212, 191, 0.18);
+
+  --shadow-card:  0 2px 4px rgba(0, 0, 0, 0.45),
+                  0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-pop:   0 12px 28px rgba(0, 0, 0, 0.65);
+}
+
+/* Match Facebook's flat surface look: no card "lift", just a
+   thin divider. The v10.3 stylesheet adds box-shadows in dark
+   mode — flatten them. */
+html.dark .panel-card,
+html.dark .card,
+html.dark .stat-card,
+html.dark .table-card,
+html.dark .summary-card,
+html.dark .info-card {
+  box-shadow: none;
+  border: 1px solid var(--border);
+}
+
+/* Sidebar should be the same surface as the cards (FB does this).
+   The v10.3 base sidebar uses --navy-dark — override in dark only. */
+html.dark .sidebar {
+  background: var(--surface-sidebar);
+  border-right: 1px solid var(--border);
+}
+html.dark .sidebar-brand {
+  border-bottom-color: var(--border);
+}
+html.dark .sidebar-brand .name,
+html.dark .brand-text .name,
+html.dark .user-info .uname { color: var(--ink-strong); }
+html.dark .sidebar-brand .sub,
+html.dark .brand-text .sub,
+html.dark .user-info .urole,
+html.dark .nav-section { color: var(--ink-soft); }
+
+/* Sidebar nav links — FB uses a soft fill on the active item, no underline */
+html.dark .sidebar a,
+html.dark .sidebar .nav-link,
+html.dark .nav-item {
+  color: var(--ink);
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+html.dark .sidebar a:hover,
+html.dark .sidebar .nav-link:hover,
+html.dark .nav-item:hover {
+  background: var(--surface-card-2);
+  color: var(--ink-strong);
+}
+html.dark .sidebar a.active,
+html.dark .sidebar .nav-link.active,
+html.dark .sidebar a[aria-current="page"],
+html.dark .nav-item.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Topbar — flatten and match the sidebar */
+html.dark .topbar {
+  background: var(--surface-topbar);
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
+}
+html.dark .topbar-user .ta,
+html.dark .topbar .page-name { color: var(--ink-strong); }
+html.dark .topbar-user .tr,
+html.dark .topbar .page-date { color: var(--ink-soft); }
+
+/* Search input — FB uses rounded pill */
+html.dark .search-box,
+html.dark .search-input input {
+  background: var(--surface-card-2);
+  border-color: var(--border);
+  color: var(--ink);
+  border-radius: 999px;
+}
+html.dark .search-box input::placeholder,
+html.dark .search-input input::placeholder { color: var(--ink-muted); }
+
+/* Buttons — slightly lifted but no glow */
+html.dark .btn-secondary {
+  background: var(--surface-card-2);
+  color: var(--ink);
+  border-color: var(--border);
+}
+html.dark .btn-secondary:hover {
+  background: var(--surface-elevated);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Tables — alternating row tone like FB messenger threads */
+html.dark table tbody tr:nth-child(even) td { background: var(--surface-card); }
+html.dark table tbody tr:nth-child(odd) td  { background: var(--surface-card); }
+html.dark table tbody tr:hover td {
+  background: var(--surface-card-2);
+  color: var(--ink-strong);
+}
+
+/* Welcome banner / stat cards — flatten gradients in dark mode */
+html.dark .welcome-banner {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  color: var(--ink-strong);
+}
+html.dark .welcome-banner h2,
+html.dark .welcome-banner p { color: var(--ink-strong); }
+
+html.dark .stat-card {
+  background: var(--surface-card);
+  color: var(--ink);
+  box-shadow: none;
+  border: 1px solid var(--border);
+}
+html.dark .stat-card .label { color: var(--ink-soft); }
+html.dark .stat-card .value { color: var(--ink-strong); }
+html.dark .stat-card .sub { color: var(--ink-muted); }
+html.dark .stat-card.blue,
+html.dark .stat-card.green,
+html.dark .stat-card.orange,
+html.dark .stat-card.red {
+  background: var(--surface-card);
+}
+
+/* Mini cards on dashboard */
+html.dark .mini-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+html.dark .mini-card .title { color: var(--ink-strong); }
+html.dark .mini-card .sub   { color: var(--ink-soft); }
+
+/* Chart cards */
+html.dark .chart-card,
+html.dark .donut-card,
+html.dark .chart-full,
+html.dark .recent-txn {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  color: var(--ink);
+}
+html.dark .card-title { color: var(--ink-strong); }
+html.dark .card-tag {
+  background: var(--surface-card-2);
+  color: var(--ink-soft);
+}
+
+/* Notification dropdown — FB uses a rounded sheet */
+html.dark .notif-dropdown {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-pop);
+  border-radius: 12px;
+}
+html.dark .notif-list .notif-item {
+  border-bottom-color: var(--border);
+  color: var(--ink);
+}
+html.dark .notif-list .notif-item:hover { background: var(--surface-card-2); }
+
+/* Modals — FB uses a darkened scrim and a flat card */
+html.dark .modal {
+  background: var(--surface-card) !important;
+  color: var(--ink);
+  box-shadow: var(--shadow-pop);
+  border: 1px solid var(--border);
+}
+
+/* Status messages — keep semantic colors but darken backgrounds */
+html.dark .status-message.info-message {
+  background: #263951;
+  color: #BBD3F5;
+  border-color: #2D88FF;
+}
+
+/* Login page in dark — flat dark gradient like FB login */
+html.dark #login-page {
+  background-color: #18191A;
+}
+html.dark #login-page::before { background: rgba(24, 25, 26, 0.85); }
+html.dark .login-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  box-shadow: var(--shadow-pop);
+}
+
+/* ============================================================
+   2. ACCOUNT SETTINGS PAGE
+   ============================================================ */
+.account-profile-card { margin-bottom: 1rem; }
+.account-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.account-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+}
+html.dark .account-avatar {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.account-profile-info { flex: 1; min-width: 0; }
+.account-name {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink-strong);
+  line-height: 1.2;
+}
+.account-meta {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+.account-sep { color: var(--ink-muted); }
+.account-super-line {
+  margin-top: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+.account-super-hint {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.account-info-cell {
+  padding: 0.85rem 0.95rem;
+  background: var(--surface-card-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.account-info-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+.account-info-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+  margin-top: 0.2rem;
+}
+.account-info-desc {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  margin-top: 0.3rem;
+  line-height: 1.45;
+}
+.account-help-note {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin-top: 1rem;
+  line-height: 1.5;
+  padding: 0.7rem 0.85rem;
+  background: var(--surface-card-2);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+
+/* Password strength meter */
+.pw-strength {
+  margin-top: 0.4rem;
+}
+.pw-strength-bar {
+  width: 100%;
+  height: 5px;
+  background: var(--surface-card-2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.pw-strength-fill {
+  height: 100%;
+  width: 0;
+  transition: width 0.25s ease, background-color 0.25s;
+}
+.pw-strength-weak   { background: #ef4444; }
+.pw-strength-fair   { background: #f59e0b; }
+.pw-strength-good   { background: #14b8a6; }
+.pw-strength-strong { background: #16a34a; }
+.pw-strength-label {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+.hint-ok   { color: #16a34a !important; }
+.hint-warn { color: #f59e0b !important; }
+html.dark .hint-ok   { color: #4ade80 !important; }
+html.dark .hint-warn { color: #fbbf24 !important; }
+
+/* ============================================================
+   3. SUPER-ACCOUNT TOGGLE + BADGES
+   ============================================================ */
+.badge-super {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+html.dark .badge-super {
+  background: #422006;
+  color: #fde68a;
+}
+
+/* Toggle switch — used for the super-account flag in users.html */
+.super-switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.super-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.super-switch-slider {
+  position: absolute;
+  inset: 0;
+  background: #cbd5e1;
+  border-radius: 999px;
+  transition: background 0.18s;
+}
+.super-switch-slider::before {
+  content: "";
+  position: absolute;
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  top: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: transform 0.18s, background 0.18s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+.super-switch input:checked + .super-switch-slider {
+  background: #f59e0b;
+}
+.super-switch input:checked + .super-switch-slider::before {
+  transform: translateX(20px);
+}
+.super-switch input:focus-visible + .super-switch-slider {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+html.dark .super-switch-slider { background: #4E4F50; }
+html.dark .super-switch input:checked + .super-switch-slider { background: #f59e0b; }
+
+/* Principal role badge — purple to distinguish from staff teal */
+.badge.principal {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+html.dark .badge.principal {
+  background: #2e1065;
+  color: #ddd6fe;
+}
+
+/* ============================================================
+   4. FORGOT-PASSWORD SUPER-ACCOUNT BRANCH
+   ============================================================ */
+.forgot-super-box {
+  margin-top: 1rem;
+  padding: 1rem 1.1rem;
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  animation: fsCardPop 0.4s ease-out;
+}
+.forgot-super-badge {
+  display: inline-block;
+  background: #f59e0b;
+  color: #ffffff;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.6rem;
+}
+.forgot-super-line {
+  font-size: 0.85rem;
+  color: #78350f;
+  margin: 0 0 0.6rem;
+}
+.forgot-super-pw {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #92400e;
+  background: #ffffff;
+  border: 2px dashed #fcd34d;
+  padding: 0.7rem 1rem;
+  border-radius: 9px;
+  letter-spacing: 0.1em;
+  text-align: center;
+  margin: 0 0 0.7rem;
+  word-break: break-all;
+  user-select: all;
+}
+.forgot-super-note {
+  font-size: 0.76rem;
+  color: #92400e;
+  line-height: 1.55;
+  margin: 0;
+}
+html.dark .forgot-super-box {
+  background: linear-gradient(180deg, #422006 0%, #78350f 100%);
+  border-color: #b45309;
+}
+html.dark .forgot-super-line,
+html.dark .forgot-super-note { color: #fde68a; }
+html.dark .forgot-super-pw {
+  background: #1f1408;
+  color: #fcd34d;
+  border-color: #b45309;
+}
+
+/* ============================================================
+   5. ITEM DETAILS PANEL + MODAL
+   ============================================================ */
+.details-btn {
+  background: #ecfeff;
+  border-color: #06b6d4;
+  color: #0e7490;
+}
+.details-btn:hover {
+  background: #cffafe;
+  border-color: #0891b2;
+  color: #155e75;
+}
+html.dark .details-btn {
+  background: rgba(8, 145, 178, 0.18);
+  border-color: #0e7490;
+  color: #67e8f9;
+}
+html.dark .details-btn:hover {
+  background: rgba(8, 145, 178, 0.32);
+  color: #cffafe;
+}
+
+/* Modal scrim + sheet */
+.details-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: detailsFadeIn 0.18s ease-out;
+}
+@keyframes detailsFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.details-sheet {
+  background: var(--surface-card);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  width: min(720px, 95vw);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-pop);
+  animation: detailsSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes detailsSlideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+.details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-card-2);
+}
+.details-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink-strong);
+  line-height: 1.3;
+}
+.details-subtitle {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  margin-top: 0.2rem;
+  font-family: 'DM Mono', monospace;
+}
+.details-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface-elevated);
+  color: var(--ink);
+  font-size: 1.1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.details-close:hover {
+  background: var(--surface-card-2);
+  color: var(--ink-strong);
+}
+.details-body {
+  padding: 1.1rem 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+}
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+}
+.details-cell {
+  background: var(--surface-card-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 0.7rem 0.85rem;
+}
+.details-cell-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.details-cell-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink-strong);
+  word-break: break-word;
+}
+.details-cell-value.mono { font-family: 'DM Mono', monospace; }
+.details-section-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  font-weight: 700;
+  margin: 1rem 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+.details-file-preview {
+  margin-top: 0.5rem;
+  background: var(--surface-card-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 0.85rem;
+  text-align: center;
+}
+.details-file-preview img {
+  max-width: 100%;
+  max-height: 320px;
+  border-radius: 7px;
+  display: block;
+  margin: 0 auto;
+}
+.details-file-preview iframe {
+  width: 100%;
+  height: 360px;
+  border: none;
+  border-radius: 7px;
+  background: #ffffff;
+}
+.details-file-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  flex-wrap: wrap;
+}
+.details-file-name {
+  font-family: 'DM Mono', monospace;
+  word-break: break-all;
+  flex: 1;
+  text-align: left;
+}
+.details-file-empty {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  text-align: center;
+  padding: 1.1rem;
+  background: var(--surface-card-2);
+  border: 1px dashed var(--border);
+  border-radius: 9px;
+  margin-top: 0.5rem;
+}
+.details-footer {
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-card-2);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+/* ============================================================
+   6. INVENTORY SORTING TOOLBAR
+   ============================================================ */
+.inventory-sort-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.inventory-sort-label {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.inventory-sort-select {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--border-input);
+  background: var(--surface-input);
+  color: var(--ink);
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  min-width: 150px;
+}
+.inventory-sort-select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+.inventory-sort-dir-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border-input);
+  background: var(--surface-input);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  font-weight: 700;
+}
+.inventory-sort-dir-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.inventory-sort-dir-btn[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Clickable column headers — only on inventory table */
+#inventory-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 1.4rem;
+}
+#inventory-table thead th.sortable::after {
+  content: "⇅";
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  opacity: 0.6;
+}
+#inventory-table thead th.sortable.sort-asc::after  { content: "↑"; color: var(--accent); opacity: 1; }
+#inventory-table thead th.sortable.sort-desc::after { content: "↓"; color: var(--accent); opacity: 1; }
+#inventory-table thead th.sortable:hover { color: var(--accent); }
+
+/* ============================================================
+   7. READ-ONLY FORM STYLING (for principal)
+   ============================================================ */
+.readonly-form {
+  position: relative;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.readonly-form::before {
+  content: "Read-only view";
+  position: absolute;
+  top: -0.6rem;
+  right: 0.5rem;
+  background: var(--surface-card-2);
+  color: var(--ink-soft);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  z-index: 2;
+}
+.readonly-form input,
+.readonly-form select,
+.readonly-form textarea,
+.readonly-form button {
+  cursor: not-allowed !important;
+}
+
+/* Hide the edit/delete/setlimit buttons in the inventory table for
+   read-only roles (principal). The Details and View File buttons
+   are still rendered. */
+.hide-write-actions button[data-action="edit"],
+.hide-write-actions button[data-action="delete"],
+.hide-write-actions button[data-action="setlimit"] {
+  display: none !important;
+}

@@ -1,0 +1,620 @@
+/* ============================================================
+   Platonian's IS — v10.6 Stylesheet
+   Loaded AFTER styles.css, reset-v10.3.css, v10.4.css, v10.5.css.
+   Focus: frontend polish based on user feedback.
+
+   Contents:
+     1. Dark mode text visibility (numbers / values readable)
+     2. Sidebar brand: stable size in both light & dark
+     3. Form grid: pack tightly, no empty cell gaps
+     4. Topbar / mobile alignment cleanup
+     5. Hide topbar export buttons on mobile, surface in drawer
+     6. Drop the "More" bottom-nav button (hamburger handles it)
+     7. Smoother hover & motion across the app
+     8. Misc dark-mode polish on mobile
+   ============================================================ */
+
+
+/* ============================================================
+   1. DARK MODE — TEXT VISIBILITY
+   The base stylesheet uses var(--gray-900) for primary copy and
+   var(--gray-700) for secondary copy. v10.4 introduced a dark
+   palette but didn't remap --gray-900 / --gray-700, so every
+   "color: var(--gray-900)" rule stays near-black on a near-black
+   background. Remap inside html.dark so existing rules just work.
+   ============================================================ */
+html.dark {
+  --gray-50:  #2C2D2E;
+  --gray-100: #3A3B3C;
+  --gray-200: #3E4042;
+  --gray-300: #4E4F50;
+  --gray-400: #8A8D91;
+  --gray-500: #B0B3B8;
+  --gray-600: #B0B3B8;
+  --gray-700: #E4E6EB;
+  --gray-800: #E4E6EB;
+  --gray-900: #E4E6EB;
+}
+
+/* Dashboard mini-card numbers, "frequently used" list values,
+   stat-card values — every one of these was bound directly to
+   --gray-900 in the base sheet. Re-anchor to ink tokens for
+   defense in depth in case the --gray remap is overridden. */
+html.dark .usage-asset,
+html.dark .usage-value,
+html.dark .mini-card .mc-info .title,
+html.dark .stat-card .value,
+html.dark .audit-summary-value,
+html.dark .stock-alert-name,
+html.dark .txn-asset,
+html.dark .table-info {
+  color: var(--ink-strong) !important;
+}
+
+html.dark .usage-meta,
+html.dark .usage-label,
+html.dark .stat-card .label,
+html.dark .stat-card .sub,
+html.dark .mini-card .mc-info .sub,
+html.dark .stock-alert-id,
+html.dark .stock-qty,
+html.dark .txn-date,
+html.dark .txn-borrower,
+html.dark .txn-dept,
+html.dark .mini-card .mc-link {
+  color: var(--ink-soft) !important;
+}
+
+/* Usage row background was #f8fafc (near-white). Flatten in dark. */
+html.dark .usage-row {
+  background: var(--surface-card-2);
+  border-color: var(--border);
+}
+
+/* Stock alert had a cream-yellow background that fights with
+   dark mode — give it a soft warning tone instead. */
+html.dark .stock-alert {
+  background: rgba(234, 179, 8, 0.10);
+  border-color: rgba(234, 179, 8, 0.35);
+}
+html.dark .stock-bar-wrap {
+  background: var(--surface-card-2);
+}
+
+
+/* ============================================================
+   2. SIDEBAR BRAND — STABLE TYPOGRAPHY
+   The brand name wraps inconsistently between light & dark
+   because subpixel rendering on the dark surface makes the
+   semibold 800-weight glyphs appear slightly wider. Pin the
+   exact size, line-height and tracking so both modes wrap the
+   same way, and give the brand-text a stable min-width.
+   ============================================================ */
+.sidebar-brand {
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.95rem 1rem;
+}
+.sidebar-brand .site-logo-img {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+.brand-text {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.brand-text .name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  /* same in both themes */
+  text-shadow: none;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+.brand-text .sub {
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.3;
+  opacity: 0.85;
+  margin-top: 0.18rem;
+}
+html.dark .brand-text .name,
+html.dark .sidebar-brand .name {
+  /* same metrics — only the colour changes */
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  text-shadow: none;
+}
+html.dark .brand-text .sub,
+html.dark .sidebar-brand .sub {
+  font-size: 0.74rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+
+/* ============================================================
+   3. FORM GRID — REMOVE EMPTY CELL GAPS
+   The User Management form is a 2-col CSS grid. Because the
+   Username field has a hint-text below it, that row is taller
+   than its sibling (Full Name), which leaves an empty band
+   below Full Name before the next row (Role) starts. CSS Grid
+   sizes rows to the tallest cell, so per-cell collapse isn't
+   possible. Switch the layout to flex-wrap so each field only
+   takes its own intrinsic height; that kills the gap entirely.
+   ============================================================ */
+.form-grid {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 0.85rem 1rem;
+  align-items: flex-start;
+}
+.form-grid > .form-field {
+  flex: 1 1 calc(50% - 0.5rem);
+  min-width: 0;
+}
+.form-grid > .form-field-full,
+.form-grid > .form-actions {
+  flex: 1 1 100%;
+}
+/* Hidden legacy email — keep it out of the flex layout entirely */
+.form-grid > .legacy-email-only {
+  display: none !important;
+}
+
+/* Hint text styling — keep it tight so it doesn't add a giant
+   block below an otherwise short input. */
+.hint-text,
+.field-hint {
+  font-size: 0.74rem;
+  line-height: 1.4;
+  margin-top: 0.3rem;
+  color: var(--gray-500);
+}
+
+/* Single column on phones */
+@media (max-width: 720px) {
+  .form-grid > .form-field {
+    flex: 1 1 100%;
+  }
+}
+
+
+/* ============================================================
+   4. TOPBAR + MOBILE ALIGNMENT
+   The page-title block was wrapping under the menu button and
+   the right-hand controls were inconsistently aligned. Restate
+   a clean two-row layout on mobile:
+     Row 1: [☰]  Page title             [🌓]  [🔔]  [avatar]
+     Row 2: [             search             ]
+   ============================================================ */
+.topbar {
+  align-items: center;
+}
+.topbar-left {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.topbar-title {
+  min-width: 0;
+}
+.topbar-title .page-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar-right {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    padding: 0.6rem 0.85rem !important;
+    gap: 0.55rem !important;
+    row-gap: 0.55rem !important;
+  }
+  .topbar-left {
+    width: auto !important;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  .topbar-right {
+    width: auto !important;
+    margin-left: auto !important;
+    justify-content: flex-end !important;
+    gap: 0.45rem !important;
+    flex-wrap: nowrap !important;
+  }
+  /* Drop the search box from the topbar on mobile — it competes
+     for space and isn't wired to a real query yet. Surface it
+     later inside individual page toolbars where it belongs. */
+  .topbar .search-box {
+    display: none !important;
+  }
+  .topbar-title .page-name {
+    font-size: 1rem;
+  }
+  .topbar-title .page-date {
+    font-size: 0.7rem;
+  }
+  /* Compact avatar block on mobile — name/role text are
+     duplicated in the drawer, so just show the avatar. */
+  .topbar-user > div {
+    display: none;
+  }
+  .topbar-user {
+    gap: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0.55rem 0.7rem !important;
+  }
+  .topbar-title .page-name {
+    font-size: 0.92rem;
+  }
+}
+
+
+/* ============================================================
+   5. HIDE TOPBAR EXPORTS ON MOBILE — DRAWER QUICK ACTIONS
+   Any topbar button marked [data-management-control="true"]
+   gets hidden on mobile. The same buttons are surfaced inside
+   the off-canvas sidebar by app.js (drawer-actions section).
+   ============================================================ */
+@media (max-width: 900px) {
+  .topbar-right [data-management-control="true"] {
+    display: none !important;
+  }
+  /* The restore-label is a <label>, also hide it. */
+  .topbar-right label[data-management-control="true"] {
+    display: none !important;
+  }
+}
+
+/* The drawer-actions section, injected by app.js into the
+   sidebar above the logout block. */
+.drawer-actions {
+  padding: 0.35rem 0.85rem 0.85rem;
+  display: none; /* shown only on mobile widths */
+}
+.drawer-actions-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-400);
+  padding: 0.6rem 0.4rem 0.45rem;
+}
+.drawer-actions .drawer-action {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.6rem 0.65rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: inherit;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+.drawer-actions .drawer-action:hover,
+.drawer-actions .drawer-action:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  transform: translateX(2px);
+}
+.drawer-actions .drawer-action svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+html.dark .drawer-actions .drawer-action {
+  color: var(--ink);
+}
+html.dark .drawer-actions .drawer-action:hover,
+html.dark .drawer-actions .drawer-action:focus-visible {
+  background: var(--surface-card-2);
+  color: var(--ink-strong);
+}
+html.dark .drawer-actions-title {
+  color: var(--ink-muted);
+}
+
+@media (max-width: 900px) {
+  .drawer-actions {
+    display: block;
+  }
+}
+
+
+/* ============================================================
+   6. BOTTOM NAV — DROP THE "MORE" BUTTON
+   The drawer (sidebar) already lists every nav item. Showing
+   a "More" tap on the bottom bar duplicates the hamburger. We
+   keep the bottom bar but only for the top 5 frequent items;
+   overflow is reachable via the hamburger. The "More" button
+   is hidden in CSS as a safety net in case app.js still emits
+   it on cached page loads.
+   ============================================================ */
+#bottom-nav-more {
+  display: none !important;
+}
+
+/* Polish the bottom-nav item interactions */
+.bottom-nav-item {
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+.bottom-nav-item:active {
+  transform: scale(0.96);
+}
+.bottom-nav-item.active .bn-icon {
+  transform: translateY(-1px);
+  transition: transform 0.18s ease;
+}
+
+
+/* ============================================================
+   7. SMOOTHER HOVER & MOTION
+   Add easing + small lifts so the interface feels responsive
+   without being noisy. Respect prefers-reduced-motion.
+   ============================================================ */
+.btn {
+  transition: background 0.18s ease, color 0.18s ease,
+              border-color 0.18s ease, transform 0.18s ease,
+              box-shadow 0.18s ease;
+  will-change: transform;
+}
+.btn:hover {
+  transform: translateY(-1px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn-primary {
+  box-shadow: 0 1px 2px rgba(13, 148, 136, 0.18);
+}
+.btn-primary:hover {
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.28);
+}
+
+/* Stat / mini / chart cards lift on hover */
+.stat-card,
+.mini-card,
+.chart-card,
+.donut-card,
+.recent-txn,
+.panel-card,
+.usage-row {
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+              border-color 0.2s ease, background 0.2s ease;
+}
+.stat-card:hover,
+.mini-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+html.dark .stat-card:hover,
+html.dark .mini-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Sidebar nav items */
+.nav-item,
+.sidebar a,
+.sidebar .nav-link {
+  transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+}
+.nav-item:hover {
+  padding-left: 1.15rem;
+}
+
+/* Notification & theme toggle micro-interactions */
+.notif-btn,
+.theme-toggle,
+.mobile-menu-btn {
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+.notif-btn:hover,
+.theme-toggle:hover {
+  transform: scale(1.06);
+}
+.notif-btn:active,
+.theme-toggle:active,
+.mobile-menu-btn:active {
+  transform: scale(0.94);
+}
+
+/* Table rows */
+tbody tr {
+  transition: background 0.15s ease;
+}
+
+/* Modal & dropdown fade-in helper (used by notif-dropdown) */
+.notif-dropdown {
+  transform-origin: top right;
+  animation: drawer-fade-in 0.18s ease;
+}
+@keyframes drawer-fade-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Sidebar drawer slide */
+.sidebar {
+  transition: left 0.24s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+.sidebar-overlay {
+  transition: opacity 0.2s ease;
+  opacity: 0;
+}
+.sidebar-overlay.show {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ============================================================
+   8. DARK MODE — MOBILE POLISH
+   The off-canvas drawer and bottom-nav both need ink-friendly
+   contrast on the dark surfaces. Pin them explicitly so they
+   don't fall back to the light token defaults.
+   ============================================================ */
+html.dark .topbar {
+  background: var(--surface-topbar);
+}
+html.dark .topbar-title .page-name {
+  color: var(--ink-strong);
+}
+html.dark .topbar-title .page-date {
+  color: var(--ink-soft);
+}
+html.dark .mobile-menu-btn {
+  background: var(--surface-card-2);
+  border-color: var(--border);
+  color: var(--ink);
+}
+html.dark .mobile-menu-btn:hover {
+  background: var(--surface-elevated);
+  color: var(--ink-strong);
+}
+
+html.dark .sidebar-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* The sidebar gradient (light-mode teal) flashes when the
+   drawer slides open over a dark page. Force the dark surface. */
+@media (max-width: 900px) {
+  html.dark .sidebar {
+    background: var(--surface-sidebar) !important;
+  }
+  html.dark .sidebar-brand {
+    border-bottom-color: var(--border);
+  }
+  html.dark .sidebar-user {
+    border-bottom-color: var(--border);
+  }
+  /* Logout button at the bottom — keep visible */
+  html.dark .logout-btn {
+    background: var(--surface-card-2);
+    color: var(--ink-strong);
+    border-color: var(--border);
+  }
+  html.dark .logout-btn:hover {
+    background: var(--surface-elevated);
+  }
+}
+
+/* Welcome banner alert chips: in dark mode, the white-on-teal
+   chips look fine in light but the dark sidebar drawer can
+   leak through. Just keep them tight. */
+html.dark .alert-badge {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Welcome banner itself in dark mode (it sits as the first
+   child of .main-content and uses a teal gradient set inline
+   somewhere in styles.css) — leave the gradient alone but
+   ensure inner text reads. */
+html.dark .welcome-banner h2,
+html.dark .welcome-banner p,
+html.dark .welcome-banner .welcome-date {
+  color: #fff;
+}
+
+/* Notification dropdown text in dark */
+html.dark .notif-empty,
+html.dark .notif-item {
+  color: var(--ink);
+}
+html.dark .notif-header-title {
+  color: var(--ink-strong);
+}
+html.dark .notif-mark-all-btn {
+  color: var(--accent);
+}
+
+/* Search box — kill the white background that shows through
+   in dark on pages where the topbar mobile rules don't hide it. */
+html.dark .search-box {
+  background: var(--surface-card-2);
+  border-color: var(--border);
+}
+html.dark .search-box input { color: var(--ink); }
+
+
+/* ============================================================
+   9. PANEL CARDS — TIGHTER SPACING ON THE FORMS PAGE
+   Avoid the "lots of air below Full Name" feeling by tightening
+   panel-card paddings on the User Management page specifically.
+   ============================================================ */
+body[data-page="users"] .panel-card {
+  padding: 1.25rem 1.35rem;
+}
+body[data-page="users"] .panel-title-row {
+  margin-bottom: 1rem;
+}
+body[data-page="users"] .form-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+/* Make sure form-field labels and inputs sit close together */
+.form-field label {
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+.form-field .field-input {
+  margin-top: 0;
+}
+
+
+/* ============================================================
+   10. EXTRA: REPORTS HEADER ON MOBILE
+   The page-name "Reports" + date sit fine, but when the export
+   buttons are hidden, the topbar-right was collapsing to a tall
+   stack because of older flex-direction: column rules. Override.
+   ============================================================ */
+@media (max-width: 700px) {
+  body[data-page="reports"] .topbar-right,
+  body[data-page="inventory"] .topbar-right,
+  body[data-page="dashboard"] .topbar-right {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+  }
+  body[data-page="reports"] .topbar-right > *,
+  body[data-page="inventory"] .topbar-right > *,
+  body[data-page="dashboard"] .topbar-right > * {
+    width: auto !important;
+  }
+}

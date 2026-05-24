@@ -1,0 +1,408 @@
+/* ============================================================
+   Platonian's IS — v10.5 Stylesheet
+   Loaded AFTER styles.css, reset-v10.3.css, and v10.4.css.
+   Contains:
+     1. Card spacing & typography polish
+     2. Dark mode text visibility fixes
+     3. Bottom navigation bar for mobile
+     4. Compact export buttons on mobile (icon-only)
+     5. Password reveal toggle helper styles
+     6. Misc tightening fixes (hints, forms)
+   ============================================================ */
+
+/* ============================================================
+   1. CARD SPACING & TYPOGRAPHY POLISH
+   Fix tight margins around card text. Card headers should stack
+   title above subtitle on narrow widths so long subtitles don't
+   collide with the title.
+   ============================================================ */
+.card-header {
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  margin-bottom: 1.1rem;
+  align-items: flex-start;
+}
+.card-header > div:first-child,
+.card-header .card-title {
+  min-width: 0;
+}
+/* When a .card-sub follows a .card-title directly inside .card-header,
+   stack it on its own line — the v10.4 build had them on the same flex
+   row, which clipped long subtitles into the title. */
+.card-header .card-title + .card-sub,
+.card-header .card-sub {
+  flex-basis: 100%;
+  margin-top: 0.1rem;
+}
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--ink-strong, #0f172a);
+}
+.card-sub {
+  font-size: 0.82rem;
+  color: var(--ink-soft, #64748b);
+  margin-top: 0.25rem;
+  line-height: 1.45;
+}
+
+/* Make sure card body has breathing room around inputs */
+.card-body .form-grid {
+  gap: 1.1rem 1.25rem;
+}
+.card-body .form-field label {
+  margin-bottom: 0.35rem;
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.card-body .hint-text {
+  margin-top: 0.4rem;
+  line-height: 1.45;
+}
+
+/* Page header spacing */
+.page-header {
+  margin-bottom: 1.25rem;
+}
+.page-title {
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+.page-subtitle {
+  margin-top: 0.15rem;
+  line-height: 1.5;
+}
+
+/* Card base — give it a proper card look since styles.css does not
+   define .card itself. The previous build relied on a flat div which
+   made the "tight" feeling worse. */
+.card {
+  background: var(--surface-card, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 14px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.card-body { padding-top: 0.15rem; }
+
+@media (max-width: 700px) {
+  .card { padding: 1.1rem 1rem; }
+  .card-title { font-size: 0.95rem; }
+  .card-sub { font-size: 0.78rem; }
+}
+
+/* ============================================================
+   2. DARK MODE TEXT VISIBILITY FIXES
+   ============================================================ */
+html.dark .card,
+html.dark .panel-card {
+  background: var(--surface-card);
+  border-color: var(--border);
+  color: var(--ink);
+}
+html.dark .card .card-title,
+html.dark .panel-card .section-label,
+html.dark .page-title {
+  color: var(--ink-strong);
+}
+html.dark .card-sub,
+html.dark .page-subtitle,
+html.dark .hint-text,
+html.dark .field-hint,
+html.dark .card-body label,
+html.dark .form-field label,
+html.dark .form-group label {
+  color: var(--ink-soft) !important;
+}
+
+/* Form inputs in dark mode — make sure text is visible */
+html.dark .field-input,
+html.dark input[type="text"],
+html.dark input[type="email"],
+html.dark input[type="password"],
+html.dark input[type="number"],
+html.dark input[type="search"],
+html.dark input[type="date"],
+html.dark textarea,
+html.dark select {
+  background: var(--surface-input);
+  color: var(--ink-strong);
+  border-color: var(--border-input);
+}
+html.dark .field-input::placeholder,
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: var(--ink-muted);
+  opacity: 1;
+}
+html.dark .field-input:focus,
+html.dark input:focus,
+html.dark textarea:focus,
+html.dark select:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Status messages — make sure they're readable in dark */
+html.dark .status-message { color: var(--ink); }
+html.dark .status-message.error-message {
+  background: #3a1f24;
+  color: #fecaca;
+  border-color: #7f1d1d;
+}
+html.dark .status-message.success-message {
+  background: #14302a;
+  color: #a7f3d0;
+  border-color: #065f46;
+}
+
+/* Account page in dark — info cells must remain visible */
+html.dark .account-info-label,
+html.dark .account-info-desc { color: var(--ink-soft); }
+html.dark .account-info-value { color: var(--ink-strong); }
+html.dark .account-help-note { color: var(--ink-soft); }
+html.dark .account-meta,
+html.dark .account-meta span { color: var(--ink-soft); }
+html.dark .account-name { color: var(--ink-strong); }
+
+/* Policy tier rows */
+html.dark .tier-desc { color: var(--ink); }
+html.dark .tier-desc strong { color: var(--ink-strong); }
+html.dark .tier-row {
+  background: var(--surface-card-2);
+  border-color: var(--border);
+}
+
+/* Login page — make all small print readable */
+html.dark .auth-info-card { color: var(--ink); }
+html.dark .auth-info-card strong { color: var(--ink-strong); }
+html.dark .auth-note,
+html.dark .auth-links,
+html.dark .sub,
+html.dark .field-hint { color: var(--ink-soft) !important; }
+
+/* Generic "small grayed-out text" should never be invisible in dark */
+html.dark p,
+html.dark span,
+html.dark div {
+  /* only nudge color where inline styles use gray-400/500 */
+}
+html.dark [style*="color:var(--gray-400)"],
+html.dark [style*="color: var(--gray-400)"],
+html.dark [style*="color:var(--gray-500)"],
+html.dark [style*="color: var(--gray-500)"] {
+  color: var(--ink-soft) !important;
+}
+
+/* Modal text in dark */
+html.dark .modal label,
+html.dark .modal h3,
+html.dark .modal p { color: var(--ink-strong); }
+html.dark .modal p[style*="gray"] { color: var(--ink-soft) !important; }
+
+/* ============================================================
+   3. BOTTOM NAVIGATION BAR — MOBILE
+   On screens <= 760px, hide the off-canvas sidebar's nav and
+   render the same nav items as a bottom tab bar. The drawer
+   itself is still reachable from the menu button if needed for
+   logout, but day-to-day navigation lives at the bottom.
+   ============================================================ */
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 950;
+  background: var(--surface-card, #ffffff);
+  border-top: 1px solid var(--border, #e2e8f0);
+  padding: 0.35rem 0.4rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -2px 12px rgba(15, 23, 42, 0.08);
+}
+.bottom-nav-inner {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-around;
+  gap: 0.15rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.bottom-nav-inner::-webkit-scrollbar { display: none; }
+.bottom-nav-item {
+  flex: 1 0 auto;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.18rem;
+  padding: 0.45rem 0.4rem;
+  border-radius: 10px;
+  color: var(--ink-soft, #64748b);
+  text-decoration: none;
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 1.1;
+  transition: background 0.15s, color 0.15s;
+  text-align: center;
+}
+.bottom-nav-item .bn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.bottom-nav-item .bn-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.bottom-nav-item .bn-label {
+  white-space: nowrap;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bottom-nav-item:hover { color: var(--ink, #0f172a); }
+.bottom-nav-item.active {
+  color: var(--accent, #0d9488);
+  background: var(--accent-soft, rgba(13, 148, 136, 0.12));
+}
+html.dark .bottom-nav {
+  background: var(--surface-card);
+  border-top-color: var(--border);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.45);
+}
+html.dark .bottom-nav-item { color: var(--ink-soft); }
+html.dark .bottom-nav-item:hover { color: var(--ink-strong); }
+html.dark .bottom-nav-item.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+@media (max-width: 760px) {
+  .bottom-nav { display: block; }
+
+  /* Push main content above the bottom bar so nothing is hidden */
+  .main-content {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* The off-canvas sidebar still exists for logout / brand, but
+     hide it from being the primary nav source. We keep the menu
+     button visible because tapping it gives access to Logout. */
+  /* (No change needed — sidebar stays off-canvas as before.) */
+}
+
+/* ============================================================
+   4. COMPACT TOPBAR EXPORT BUTTONS ON MOBILE
+   The export / backup / restore buttons crowd the topbar on
+   reports and inventory. On mobile, collapse their labels to
+   icons only and let them wrap to a small button row.
+   ============================================================ */
+@media (max-width: 760px) {
+  .topbar-right {
+    gap: 0.3rem !important;
+    flex-wrap: wrap !important;
+  }
+  .topbar-right .btn {
+    font-size: 0.72rem !important;
+    padding: 0.4rem 0.55rem !important;
+  }
+  /* For the reports page especially: shrink long export buttons */
+  body[data-page="reports"] .topbar-right .btn,
+  body[data-page="inventory"] .topbar-right .btn,
+  body[data-page="dashboard"] .topbar-right .btn {
+    flex: 0 0 auto;
+    max-width: 48%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+}
+
+/* Tuck export buttons into a dropdown-like row by collapsing them
+   below the search/notif row on very small screens. */
+@media (max-width: 480px) {
+  .topbar-right .btn {
+    font-size: 0.68rem !important;
+    padding: 0.35rem 0.5rem !important;
+  }
+}
+
+/* ============================================================
+   5. PASSWORD REVEAL TOGGLE STYLING
+   The existing .pw-wrap / .pw-toggle pair from styles.css works
+   for the auth screens. Make sure the same pattern works inside
+   .field-input contexts (users page, account page) by allowing
+   the toggle to position over field-input as well.
+   ============================================================ */
+.pw-wrap { position: relative; display: block; }
+.pw-wrap .field-input,
+.pw-wrap input { padding-right: 3rem !important; }
+.pw-wrap .pw-toggle {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--ink-soft, #64748b);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+.pw-wrap .pw-toggle:hover {
+  background: var(--surface-card-2, #f1f5f9);
+  color: var(--ink-strong, #0f172a);
+}
+html.dark .pw-wrap .pw-toggle {
+  color: var(--ink-soft);
+}
+html.dark .pw-wrap .pw-toggle:hover {
+  background: var(--surface-card-2);
+  color: var(--ink-strong);
+}
+
+/* ============================================================
+   6. MISC POLISH
+   ============================================================ */
+
+/* Email-removed: hide any element marked as legacy email */
+.legacy-email-only { display: none !important; }
+
+/* Improve the look of the topbar mobile menu button */
+@media (max-width: 760px) {
+  .mobile-menu-btn {
+    font-size: 1.3rem;
+    padding: 0.3rem 0.5rem;
+  }
+}
+
+/* The status-message inside card-header on policy should sit below */
+.card-header .status-message {
+  flex-basis: 100%;
+  order: 99;
+}
+
+/* Make sure .policy-tiers spacing is comfortable */
+.policy-tiers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Tighten registered-users / locked-accounts table info text */
+html.dark .table-info,
+html.dark .toolbar-right input::placeholder,
+html.dark .toolbar-right .search-input input {
+  color: var(--ink);
+}
+html.dark .table-info { color: var(--ink-strong); }

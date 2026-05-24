@@ -1,0 +1,412 @@
+/* ============================================================
+   Platonian's IS — v10.8 Stylesheet
+   Loaded LAST, after v10.7.css. Defense-prep round 2:
+
+   Contents:
+     1. Reports topbar — REAL fix (wider breakpoint so the
+        wrap kicks in at typical desktop widths, not only at
+        tablet)
+     2. Login mobile layout — re-ordered:
+          Hero (logo + headline + yellow text LEFT-aligned)
+          → Login Card
+          → Stat boxes (10 / 331)
+     3. Notifications — dark-mode polish for the colored
+        states (overdue, due-soon, low-stock, out-of-stock,
+        unread). Stops the bright pink "AI-generated" look.
+     4. User Management form — close the empty space between
+        the two grid rows on desktop
+     5. Status message badge styling polish (the red error
+        chip on User Management was floating awkwardly)
+   ============================================================ */
+
+
+/* ============================================================
+   1. REPORTS TOPBAR — REAL FIX
+   v10.7's 1180px breakpoint missed because a typical 1366px
+   laptop viewport never triggered it. Bump to 1400px so the
+   buttons wrap into a clean second row on any viewport below
+   1400px (which covers every common laptop). Also tighten the
+   gap so 5 buttons fit two per row instead of overflowing.
+   ============================================================ */
+@media (max-width: 1399px) {
+  body[data-page="reports"] .topbar {
+    flex-wrap: wrap !important;
+    height: auto !important;
+    align-items: center;
+    padding: 0.65rem 1.25rem !important;
+    row-gap: 0.5rem;
+  }
+  body[data-page="reports"] .topbar-left {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+  }
+  body[data-page="reports"] .topbar-right {
+    flex: 1 1 100%;
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    row-gap: 0.45rem;
+  }
+  body[data-page="reports"] .topbar-right .btn,
+  body[data-page="reports"] .topbar-right label.btn {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    padding: 0.4rem 0.7rem;
+    white-space: nowrap;
+  }
+  /* Theme toggle, notif, and user avatar stay together at
+     the end of the row so they read as one cluster. */
+  body[data-page="reports"] .topbar-right .theme-toggle,
+  body[data-page="reports"] .topbar-right .notif-wrapper,
+  body[data-page="reports"] .topbar-right .topbar-user {
+    flex-shrink: 0;
+  }
+  /* Push the topbar content down a touch so the title row
+     gets enough breathing room above the buttons row. */
+  body[data-page="reports"] .main-content {
+    padding-top: 0.5rem;
+  }
+}
+
+/* Real mobile: hide the inline action buttons (drawer carries
+   them via the management-control rules in v10.6) and keep
+   the topbar to a single line. */
+@media (max-width: 760px) {
+  body[data-page="reports"] .topbar-right {
+    flex-wrap: nowrap;
+    width: auto;
+    flex: 0 1 auto;
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+  body[data-page="reports"] .topbar-left {
+    flex: 1 1 auto;
+    width: auto;
+  }
+}
+
+
+/* ============================================================
+   2. LOGIN MOBILE LAYOUT — REORDERED
+   New requirements:
+     - Yellow descriptive text → LEFT-aligned (not justified)
+     - Login card goes BELOW the yellow text
+     - Stat boxes (10 / 331) go BELOW the login card
+
+   Implementation trick: on mobile, make .login-left use
+   display:contents so its children become direct siblings of
+   .login-card in the .login-container flex. Then use `order`
+   to place stats last.
+
+   Desktop layout is untouched (still two columns side-by-side).
+   ============================================================ */
+@media (max-width: 900px) {
+  #login-page {
+    align-items: flex-start;
+    padding: 1.25rem 1rem 1.5rem;
+    overflow-y: auto;
+  }
+  .login-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  /* Make .login-left transparent in the layout tree so its
+     children act as siblings of .login-card. */
+  .login-left {
+    display: contents;
+  }
+
+  /* Force a flexible visual order:
+       1 — logo block
+       2 — headline
+       3 — yellow paragraph
+       4 — login card
+       5 — stats (10 / 331)
+     The desktop styles don't honor `order` because there it's
+     not a flex container child layout. Safe to set here. */
+  .login-logo     { order: 1; }
+  .login-headline { order: 2; }
+  .login-subtext  { order: 3; }
+  .login-card     { order: 4; }
+  .login-stats    { order: 5; }
+
+  /* Logo block: centered, bigger logo */
+  .login-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 0.7rem;
+  }
+  .login-logo .site-logo-img {
+    width: 60px;
+    height: 60px;
+    border-width: 2px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+  }
+  .login-logo-text {
+    text-align: left;
+  }
+  .login-logo-text h1 {
+    font-size: 1.35rem;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .login-logo-text p {
+    font-size: 0.82rem;
+    margin: 0.15rem 0 0;
+  }
+
+  /* Tagline → centered */
+  .login-headline {
+    text-align: center;
+    font-size: 1.55rem;
+    line-height: 1.18;
+    margin: 0 0 0.5rem;
+  }
+
+  /* Yellow paragraph → LEFT-aligned (per new brief).
+     Reset the v10.7 `text-align: justify` rule. */
+  .login-subtext {
+    text-align: left;
+    text-justify: auto;
+    hyphens: manual;
+    max-width: none;
+    margin: 0 0 0.25rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  /* Login card: full-width, sits directly below the yellow
+     paragraph. */
+  .login-card {
+    width: 100%;
+    margin: 0;
+    padding: 1.35rem 1.15rem 1.5rem;
+  }
+
+  /* Stats: appear below the login card, side by side */
+  .login-stats {
+    display: flex;
+    flex-direction: row;
+    gap: 0.75rem;
+    margin: 0 0 0.25rem;
+    width: 100%;
+  }
+  .login-stats .stat-box {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+/* Tighter still on small phones */
+@media (max-width: 480px) {
+  #login-page {
+    padding: 1rem 0.85rem 1.25rem;
+  }
+  .login-logo .site-logo-img {
+    width: 56px;
+    height: 56px;
+  }
+  .login-logo-text h1 { font-size: 1.2rem; }
+  .login-logo-text p  { font-size: 0.78rem; }
+  .login-headline     { font-size: 1.35rem; }
+  .login-subtext      { font-size: 0.84rem; }
+  .login-stats        { gap: 0.5rem; }
+}
+
+
+/* ============================================================
+   3. NOTIFICATION DROPDOWN — DARK MODE POLISH
+   In dark mode the colored variant items (notif-overdue,
+   notif-due-soon, notif-low-stock, notif-out-of-stock, and
+   the default notif-unread) inherited their light-mode
+   backgrounds — bright pink, light yellow, light orange —
+   which read as garish/AI-generated against the dark drop-
+   down panel. Replace with semi-transparent tinted layers
+   that match the dark surface palette.
+
+   Also tone down the light-mode pulse animation that made
+   overdue items strobe distractingly.
+   ============================================================ */
+
+/* Light mode: gentler pulse (was alternating between two
+   pinks; now just a soft opacity nudge). */
+@keyframes notif-pulse {
+  0%, 100% { background: #fff1f2; }
+  50%       { background: #ffe4e6; }
+}
+
+/* Dark mode — tinted dark surfaces with colored left border */
+html.dark .notif-list .notif-item {
+  background: var(--surface-card);
+  color: var(--ink);
+  border-bottom-color: var(--border);
+}
+html.dark .notif-list .notif-item:hover {
+  background: var(--surface-card-2);
+}
+
+html.dark .notif-item.notif-unread {
+  background: rgba(45, 212, 191, 0.08);
+  border-left: 3px solid #2dd4bf;
+}
+html.dark .notif-item.notif-unread:hover {
+  background: rgba(45, 212, 191, 0.14);
+}
+
+html.dark .notif-item.notif-overdue {
+  background: rgba(239, 68, 68, 0.10);
+  border-left: 4px solid #f87171;
+  animation: notif-pulse-dark 2.4s ease-in-out infinite;
+}
+html.dark .notif-item.notif-overdue:hover {
+  background: rgba(239, 68, 68, 0.16);
+}
+html.dark .notif-item.notif-overdue .notif-title {
+  color: #fca5a5;
+}
+html.dark .notif-item.notif-overdue .notif-msg {
+  color: #fecaca;
+}
+@keyframes notif-pulse-dark {
+  0%, 100% { background: rgba(239, 68, 68, 0.10); }
+  50%       { background: rgba(239, 68, 68, 0.18); }
+}
+
+html.dark .notif-item.notif-due-soon {
+  background: rgba(217, 119, 6, 0.10);
+  border-left: 4px solid #fbbf24;
+}
+html.dark .notif-item.notif-due-soon:hover {
+  background: rgba(217, 119, 6, 0.16);
+}
+html.dark .notif-item.notif-due-soon .notif-title {
+  color: #fcd34d;
+}
+
+html.dark .notif-item.notif-low-stock {
+  background: rgba(249, 115, 22, 0.08);
+  border-left: 4px solid #fb923c;
+}
+html.dark .notif-item.notif-low-stock:hover {
+  background: rgba(249, 115, 22, 0.14);
+}
+html.dark .notif-item.notif-low-stock .notif-title {
+  color: #fdba74;
+}
+
+html.dark .notif-item.notif-out-of-stock {
+  background: rgba(225, 29, 72, 0.10);
+  border-left: 4px solid #fb7185;
+}
+html.dark .notif-item.notif-out-of-stock:hover {
+  background: rgba(225, 29, 72, 0.16);
+}
+html.dark .notif-item.notif-out-of-stock .notif-title {
+  color: #fda4af;
+}
+
+/* Title/message in dark — calmer than light's near-black */
+html.dark .notif-title {
+  color: var(--ink-strong);
+}
+html.dark .notif-msg {
+  color: var(--ink-soft);
+}
+html.dark .notif-time {
+  color: var(--ink-muted);
+}
+
+/* Icon column: light-mode emoji-style icons read fine, but the
+   dark-mode panel can use a slight icon size bump for legibility. */
+html.dark .notif-icon {
+  opacity: 0.92;
+}
+
+/* The unread dot on the bell button used a saturated green that
+   clashes with the teal palette. Match the accent. */
+.notif-dot {
+  background: var(--accent, #0d9488);
+}
+html.dark .notif-dot {
+  background: #2dd4bf;
+  box-shadow: 0 0 0 2px var(--surface-topbar, #1a1f25);
+}
+.notif-count-badge {
+  background: #ef4444;
+}
+html.dark .notif-count-badge {
+  background: #f87171;
+  color: #1f2937;
+}
+
+
+/* ============================================================
+   4. USER MANAGEMENT — KILL THE EMPTY VERTICAL SPACE
+   With the email field removed, the form-grid still wraps
+   into two rows: [Full Name | Username] then [Role | Password].
+   Because Username has a long hint and Full Name doesn't, the
+   first row grows tall, leaving an empty rectangle under
+   Full Name before Role starts.
+
+   Fix: align-self so each field hugs the top of its grid row,
+   plus minimum field-grid row spacing trimmed.
+   ============================================================ */
+body[data-page="users"] .form-grid {
+  align-items: start;
+  row-gap: 0.85rem;
+}
+body[data-page="users"] .form-field {
+  align-self: start;
+}
+
+/* The form-actions row sometimes shows the leftover hidden
+   email field, which still occupies a flex track. Force it
+   out of the flow. */
+body[data-page="users"] .legacy-email-only {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 0 !important;
+}
+
+
+/* ============================================================
+   5. STATUS MESSAGE BADGE POLISH
+   The "Please enter a valid email address" chip floats in
+   the top-right of the panel-card header. With the email bug
+   fixed it shouldn't appear anymore, but if any other form
+   error fires the chip should sit cleanly inline, not over-
+   lapping the form fields below.
+   ============================================================ */
+body[data-page="users"] .panel-title-row {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+body[data-page="users"] .status-message {
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   6. SIDEBAR BRAND CONTAINER — kill stray light spot in dark
+   While testing notifications, noticed the sidebar brand
+   container still uses a teal gradient that meets dark-mode
+   pretty well, but the logo's white border ring (set in
+   styles.css) is too bright. Soften it in dark.
+   ============================================================ */
+html.dark .sidebar-brand .site-logo-img {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}

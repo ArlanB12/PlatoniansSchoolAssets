@@ -1,0 +1,81 @@
+/* ============================================================
+   Platonian's School Assets — v10.17 styles
+   Loaded LAST. Additive only. Two concerns:
+     1. Top progress bar so navigation feels instant.
+     2. Kill the empty white strip at the bottom of mobile pages.
+   ============================================================ */
+
+/* ── 1. NAVIGATION PROGRESS BAR ───────────────────────────── */
+#nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  z-index: 4000;
+  background: linear-gradient(90deg, var(--navy-light, #0d9488), var(--green, #059669));
+  box-shadow: 0 0 8px rgba(13, 148, 136, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 0 2px 2px 0;
+}
+#nav-progress.active {
+  opacity: 1;
+  width: 85%;
+  /* Creep toward the end while the next page loads, then the new
+     page replaces this element entirely on load. */
+  transition: width 8s cubic-bezier(0.1, 0.7, 0.1, 1), opacity 0.15s;
+}
+#nav-progress.done {
+  width: 100%;
+  opacity: 0;
+  transition: width 0.2s ease, opacity 0.3s ease 0.1s;
+}
+
+/* ── 2. MOBILE: NO TRAILING WHITE SPACE ───────────────────── */
+/* The mint page background (--surface-app) used to show through
+   below short pages because the layout containers did not fill
+   the screen and the bottom padding was oversized. We make the
+   whole column fill the viewport and trim the bottom padding to
+   exactly clear the floating bottom-nav. */
+@media (max-width: 760px) {
+  html,
+  body {
+    min-height: 100%;
+    background: var(--surface-app, #ecfdf5);
+  }
+  html.dark,
+  html.dark body {
+    background: var(--surface-app);
+  }
+
+  .app-layout {
+    /* Use dynamic viewport height where supported so mobile browser
+       chrome (the URL bar shrinking) never leaves a gap. */
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-content {
+    flex: 1 1 auto;
+    /* Just enough room for the bottom-nav (~3.6rem) plus the safe
+       area on notched phones — no more, so there is no dead strip. */
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+    background: var(--surface-app, #ecfdf5);
+  }
+  html.dark .main-content { background: var(--surface-app); }
+
+  /* The off-canvas sidebar is a fixed drawer on mobile, so it must
+     not participate in the flex column (it would add phantom height
+     at the bottom). Pull it out of flow defensively. */
+  .sidebar { flex: 0 0 auto; }
+}
+
+/* Very small phones: keep the trim tight. */
+@media (max-width: 380px) {
+  .main-content {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}

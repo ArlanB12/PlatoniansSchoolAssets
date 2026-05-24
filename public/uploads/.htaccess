@@ -1,0 +1,17 @@
+# ============================================================
+# Uploads — disable script execution
+# ============================================================
+# Even though api/assets.php validates MIME type before saving,
+# we add belt-and-suspenders here so that ANY file in this
+# folder is served as static content, never executed.
+
+<FilesMatch "\.(php|php3|php4|php5|phtml|phar|inc)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+RemoveHandler .php .phtml .phar
+RemoveType .php .phtml .phar
+php_flag engine off
+
+Options -Indexes -ExecCGI

@@ -1,0 +1,179 @@
+/* ============================================================
+   Platonian's IS — v10.15 (CSS patch)
+   Loaded LAST, after v10.14.css.
+
+   Fixes three reported bugs:
+
+     1. REPORTS TOPBAR ALIGNMENT (desktop). The "Reports" title
+        sat at the very top while Quick Actions / theme / bell /
+        Admin sat lower. Root cause: the v10.8 reports-only wrap
+        rule (max-width:1399px) still forced flex-wrap:wrap and
+        split .topbar-left / .topbar-right onto two stacked rows.
+        That rule existed back when there were 5 inline export
+        buttons. Now Quick Actions collapses them into ONE
+        trigger, so the bar fits on a single row at every desktop
+        / tablet width. We fully neutralise the obsolete wrap
+        across the whole 761-1399px band and lock vertical
+        centering so the title and the icon cluster share one
+        centerline.
+
+     2. NOTIFICATIONS — MOBILE SCROLL. The dropdown could not be
+        scrolled on phones. Root cause: app.js opens the panel
+        with an inline `display:block`, which overrode the
+        v10.13/v10.14 `display:flex` sheet layout (inline styles
+        beat non-!important stylesheet rules). With display:block
+        the `.notif-list { flex:1 1 auto; min-height:0 }` scroll
+        region never formed, so the list simply overflowed past
+        the bottom of the screen, clipped by the dropdown's
+        `overflow:hidden`. v10.15.js now adds a `.notif-open`
+        class to the dropdown when it opens; we drive the mobile
+        sheet layout from THAT class with !important so the
+        inline display can no longer break it.
+
+     3. (carried) Keep the mobile sheet a real scroll container
+        on mid-size phones (601-900px) too, not just <=600px.
+   ============================================================ */
+
+
+/* ============================================================
+   1. REPORTS TOPBAR — KILL THE OBSOLETE WRAP, ONE ROW
+   The v10.8 rule (max-width:1399px) and the styles.css rule
+   (max-width:1050px) both forced the reports topbar to wrap.
+   Reset everything they set so the bar behaves like every
+   other page: a single centered row down to the mobile
+   drawer breakpoint (<=760px).
+   ============================================================ */
+@media (min-width: 761px) and (max-width: 1399px) {
+  body[data-page="reports"] .topbar {
+    flex-wrap: nowrap !important;
+    height: var(--topbar-h) !important;
+    padding: 0 1.5rem !important;
+    row-gap: 0 !important;
+    align-items: center !important;
+  }
+  body[data-page="reports"] .topbar-left {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    align-items: center !important;
+  }
+  body[data-page="reports"] .topbar-right {
+    flex: 0 1 auto !important;
+    width: auto !important;
+    margin-left: auto !important;
+    margin-top: 0 !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    row-gap: 0 !important;
+  }
+  body[data-page="reports"] .main-content {
+    padding-top: 1.5rem !important;
+  }
+}
+
+/* Belt-and-braces: at EVERY width above the mobile drawer, the
+   topbar's direct children share one vertical centerline and
+   the title block centers (not top-aligns) against the icon
+   cluster. The two-line title+date stays balanced. */
+.topbar { align-items: center !important; }
+.topbar-left,
+.topbar-right { align-items: center !important; }
+.topbar-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* The Quick Actions trigger, theme toggle, bell and avatar all
+   sit on the same baseline as the title. */
+.topbar-right > * { align-self: center; }
+
+
+/* ============================================================
+   2. NOTIFICATIONS DROPDOWN — CLASS-DRIVEN MOBILE SHEET
+   v10.15.js toggles `.notif-open` on #notif-dropdown the moment
+   it opens. Driving the layout from this class with !important
+   means the inline `display:block` app.js sets can no longer
+   collapse the flex scroll container.
+   ============================================================ */
+
+/* Up to 900px the panel becomes a real flex column sheet whose
+   middle (.notif-list) is the only thing that scrolls. */
+@media (max-width: 900px) {
+  .notif-dropdown.notif-open {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  .notif-dropdown.notif-open .notif-header {
+    flex: 0 0 auto !important;
+  }
+  .notif-dropdown.notif-open .notif-list {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;        /* lets the flex child scroll */
+    max-height: none !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+}
+
+/* Phones (<=600px): full-bleed fixed sheet anchored under the
+   topbar, capped to the visible viewport so the list always
+   has a bounded height to scroll within. */
+@media (max-width: 600px) {
+  .notif-dropdown.notif-open {
+    position: fixed !important;
+    top: 64px !important;
+    left: 0.5rem !important;
+    right: 0.5rem !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100vh - 80px) !important;
+    max-height: calc(100dvh - 80px) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 14px 44px rgba(15, 23, 42, 0.30) !important;
+    z-index: 1300 !important;
+    animation: none !important;      /* the slide-in transform created a stacking/scroll quirk */
+  }
+}
+
+/* Mid-size phones / small tablets (601-900px): the panel stays
+   anchored to the bell but is still a bounded scroll box. */
+@media (min-width: 601px) and (max-width: 900px) {
+  .notif-dropdown.notif-open {
+    max-height: min(70vh, 460px) !important;
+  }
+}
+
+/* When the sheet is open on a phone, lock the page behind it so
+   a swipe scrolls the LIST, not the dashboard. v10.15.js adds
+   body.notif-open. We intentionally do NOT put touch-action:
+   none on the body here (that was blocking the list's own
+   pan-y on some Chromium/Brave builds) — overflow:hidden plus
+   the list's overscroll-behavior:contain is enough. */
+@media (max-width: 600px) {
+  body.notif-open {
+    overflow: hidden !important;
+    /* v10.14 set touch-action:none here, which blocked the
+       notif-list's own pan-y scroll on some Chromium/Brave
+       builds. Re-enable touch panning so the list inside the
+       sheet can be swiped. */
+    touch-action: auto !important;
+  }
+  body.notif-open .topbar {
+    z-index: 1310 !important;
+  }
+  .notif-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.35);
+    z-index: 1290;
+    opacity: 0;
+    transition: opacity 0.16s ease;
+  }
+  .notif-backdrop.show { opacity: 1; }
+}

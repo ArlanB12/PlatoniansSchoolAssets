@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platonian's School Assets - Users</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/reset-v10.3.css">
+  <link rel="stylesheet" href="assets/css/v10.4.css">
+  <link rel="stylesheet" href="assets/css/v10.5.css">
+  <link rel="stylesheet" href="assets/css/v10.6.css">
+  <link rel="stylesheet" href="assets/css/v10.7.css">
+  <link rel="stylesheet" href="assets/css/v10.8.css">
+  <link rel="stylesheet" href="assets/css/v10.9.css">
+  <link rel="stylesheet" href="assets/css/v10.10.css">
+  <link rel="stylesheet" href="assets/css/v10.11.css">
+  <link rel="stylesheet" href="assets/css/v10.13.css">
+  <link rel="stylesheet" href="assets/css/v10.14.css">
+  <link rel="stylesheet" href="assets/css/v10.15.css">
+  <link rel="stylesheet" href="assets/css/v10.16.css">
+  <link rel="stylesheet" href="assets/css/v10.17.css">
+  <link rel="stylesheet" href="assets/css/v10.20.css">
+  <link rel="stylesheet" href="assets/css/v10.21.css">
+  <script>
+    // Apply persisted theme BEFORE first paint to avoid a flash of the wrong theme.
+    try {
+      var t = localStorage.getItem('platonian_theme') || 'light';
+      if (t === 'dark') document.documentElement.classList.add('dark');
+    } catch (e) {}
+  </script>
+  <style>
+    /* v7.0 — brief highlight when jumping to a card via a nav anchor */
+    .nav-highlight {
+      animation: navHighlightPulse 2s ease-out;
+      scroll-margin-top: 90px;
+    }
+    @keyframes navHighlightPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.45); }
+      30%  { box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.30); }
+      100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
+    }
+  </style>
+</head>
+<body data-page="users">
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img src="assets/img/logo.png" alt="Platonian's School Assets logo" class="site-logo-img">
+        <div class="brand-text">
+          <div class="name">Platonian's School Assets</div>
+          <div class="sub">Inventory System</div>
+        </div>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sb-avatar">U</div>
+        <div class="user-info">
+          <div class="uname" id="sb-name">User</div>
+          <div class="urole" id="sb-role">Role</div>
+        </div>
+      </div>
+
+      <div class="nav-section">Navigation</div>
+      <nav id="sidebar-nav"></nav>
+
+      <div class="sidebar-logout">
+        <button class="logout-btn" id="logout-btn" aria-label="Log out">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Open menu">&#9776;</button>
+        <div class="topbar-title">
+          <div class="page-name" id="topbar-page">Users</div>
+          <div class="page-date" id="topbar-date"></div>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button class="theme-toggle theme-toggle-topbar" id="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg class="ti-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="ti-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <div class="notif-wrapper">
+        <button class="notif-btn" id="notif-bell-btn" type="button" aria-label="Notifications">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot" id="notif-dot" style="display:none;"></span>
+          <span class="notif-count-badge" id="notif-count-badge" style="display:none;"></span>
+        </button>
+        <div class="notif-dropdown" id="notif-dropdown" style="display:none;">
+          <div class="notif-header">
+            <span class="notif-header-title">Notifications</span>
+            <button class="notif-mark-all-btn" id="notif-mark-all-btn" type="button">Mark all read</button>
+          </div>
+          <div class="notif-list" id="notif-list">
+            <div class="notif-empty">No notifications yet.</div>
+          </div>
+        </div>
+      </div>
+        <div class="topbar-user">
+          <div class="user-avatar" id="tb-avatar">U</div>
+          <div>
+            <div class="ta" id="tb-name">User</div>
+            <div class="tr" id="tb-role">Role</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="panel-card">
+        <div class="panel-title-row">
+          <div class="section-label">User Management</div>
+          <div id="users-message" class="status-message" aria-live="polite"></div>
+        </div>
+
+        <form id="users-form" class="form-grid">
+          <div class="form-field">
+            <label for="user-name">Full Name</label>
+            <input id="user-name" class="field-input" type="text" required>
+          </div>
+
+          <div class="form-field">
+            <label for="user-username">Username</label>
+            <input id="user-username" class="field-input" type="text" spellcheck="false" placeholder="3-32 characters" maxlength="32" required>
+            <div class="hint-text">Login identifier. Uppercase, lowercase, numbers, and symbols (no spaces or @) are all allowed.</div>
+          </div>
+
+          <div class="form-field legacy-email-only" style="display:none;">
+            <!-- v10.5 — email removed from UI. Synthesized from username
+                 in users.js so the existing API keeps working. -->
+            <input id="user-email" class="field-input" type="hidden">
+          </div>
+
+          <div class="form-field">
+            <label for="user-role">Role</label>
+            <select id="user-role" class="field-input" required>
+              <option value="admin">Admin</option>
+              <option value="custodian">Property Custodian</option>
+              <option value="teacher">Teacher</option>
+              <option value="principal">School Principal (Read-only)</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="user-password">Password</label>
+            <div class="pw-wrap">
+              <input id="user-password" class="field-input" type="password" required autocomplete="new-password">
+              <button type="button" class="pw-toggle" data-toggle-for="user-password">Show</button>
+            </div>
+            <div class="hint-text" id="user-password-hint">Use at least 6 characters.</div>
+          </div>
+
+          <div class="form-actions form-field-full">
+            <button id="users-submit-btn" class="btn btn-primary" type="submit">Add User</button>
+            <button id="users-cancel-btn" class="btn btn-secondary" type="button" hidden>Cancel Edit</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel-card">
+        <div class="toolbar-row">
+          <div class="table-info">Registered Users</div>
+          <div class="toolbar-right">
+            <div class="search-input">
+              <input id="users-search" type="text" placeholder="Search by name, username, or role">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <table id="users-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th title="Allows the user to self-recover via Forgot Password. Admin/Custodian only.">Super Account</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ── PASSWORD RESET REQUESTS (Admin only) ────────────
+           Moved here from Lending Policy in v10.8 — this is
+           the right home for it: user-account workflows live
+           under User Management. -->
+      <div class="card" id="reset-requests-card">
+        <div class="card-header reset-card-header">
+          <div>
+            <h2 class="card-title">
+              🔑 Password Reset Requests
+              <span class="badge-pending-count" id="reset-pending-count" style="display:none;">0</span>
+            </h2>
+            <p class="card-sub">
+              Users submit reset requests here. Verify the requester in person, then approve to generate a temporary password.
+              <strong>Never approve a request without confirming the requester's identity face-to-face.</strong>
+            </p>
+          </div>
+          <div class="reset-tabs">
+            <button type="button" class="reset-tab active" data-tab="pending">Pending</button>
+            <button type="button" class="reset-tab" data-tab="approved">Approved</button>
+            <button type="button" class="reset-tab" data-tab="denied">Denied</button>
+            <button type="button" class="reset-tab" data-tab="all">All</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="reset-requests-list">
+            <p style="color:var(--gray-400);font-size:0.875rem;">Loading…</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Approval / Deny modal -->
+      <div id="reset-modal" class="reset-modal" style="display:none;">
+        <div class="reset-modal-backdrop"></div>
+        <div class="reset-modal-box" role="dialog" aria-modal="true">
+          <div id="reset-modal-content"></div>
+        </div>
+      </div>
+
+      <!-- ── FLAGGED BORROWERS (Admin/Custodian only) ──────── -->
+      <section class="panel-card" id="flagged-section" data-management-control="true">
+        <div class="panel-title-row">
+          <div class="section-label">⚠️ Flagged Borrowers — Overdue Accountability</div>
+        </div>
+        <div id="flagged-empty" style="color:var(--gray-500);font-size:0.85rem;padding:0.75rem 0;display:none;">
+          ✅ No flagged borrowers. All items are returned on time.
+        </div>
+        <div class="table-card">
+          <table id="flagged-table">
+            <thead>
+              <tr>
+                <th>Borrower</th>
+                <th>Overdue Item</th>
+                <th>Was Due</th>
+                <th>Days Late</th>
+                <th>Tier / Status</th>
+                <th>Override</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="flagged-table-body">
+              <tr><td colspan="7" style="text-align:center;color:var(--gray-400);padding:1.5rem;">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Override Modal -->
+      <div id="override-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;align-items:center;justify-content:center;">
+        <div style="background:white;border-radius:14px;padding:1.75rem;width:min(440px,92vw);box-shadow:0 8px 40px rgba(0,0,0,0.18);">
+          <h3 style="margin:0 0 0.25rem;font-size:1.05rem;" id="override-modal-title">Lift Restriction</h3>
+          <p style="font-size:0.82rem;color:var(--gray-500);margin:0 0 1rem;" id="override-modal-sub"></p>
+          <label style="font-size:0.82rem;font-weight:600;display:block;margin-bottom:0.35rem;">Reason / Note <span style="font-weight:400;color:var(--gray-400)">(required)</span></label>
+          <textarea id="override-note" rows="3" class="field-input" placeholder="e.g. Item lost — replacement arranged by teacher. Cleared by admin." style="width:100%;resize:vertical;font-size:0.85rem;"></textarea>
+          <div style="display:flex;gap:0.75rem;margin-top:1rem;justify-content:flex-end;">
+            <button class="btn btn-secondary" id="override-cancel-btn" type="button">Cancel</button>
+            <button class="btn btn-primary" id="override-confirm-btn" type="button">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+    <script src="assets/js/theme.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/users.js"></script>
+  <script src="assets/js/reset-requests.js"></script>
+  <script src="assets/js/entry.js"></script>
+  <script src="assets/js/v10.6.js"></script>
+  <script src="assets/js/v10.7.js"></script>
+  <script src="assets/js/v10.9.js"></script>
+  <script src="assets/js/v10.10.js"></script>
+  <script src="assets/js/v10.11.js"></script>
+  <script src="assets/js/v10.14.js"></script>
+  <script src="assets/js/v10.15.js"></script>
+  <script src="assets/js/v10.16.js"></script>
+  <script src="assets/js/v10.17.js"></script>
+  <script src="assets/js/v10.20.js"></script>
+  <script src="assets/js/v10.21.js"></script>
+  <script>
+    // v10.8 — boot the Password Reset Requests panel after the
+    // session is ready. reset-requests.js no-ops if the card is
+    // not on the page or if the user isn't an admin.
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (window.API && window.API.bootstrap) {
+        try { await window.API.bootstrap(); } catch (e) {}
+      }
+      if (window.IMS && typeof window.IMS.initResetRequests === "function") {
+        window.IMS.initResetRequests();
+      }
+
+      // v7.0 — when arriving via the "Password Resets" nav link
+      // (users.html#reset-requests-card), scroll the reset card into
+      // view and briefly highlight it. The card renders async, so a
+      // short delay ensures it exists before we scroll. The old #resets
+      // hash is handled too as a fallback.
+      const hash = (window.location.hash || "").replace("#", "");
+      if (hash === "reset-requests-card" || hash === "resets") {
+        setTimeout(() => {
+          const card = document.getElementById("reset-requests-card");
+          if (card) {
+            card.scrollIntoView({ behavior: "smooth", block: "start" });
+            card.classList.add("nav-highlight");
+            setTimeout(() => card.classList.remove("nav-highlight"), 2000);
+          }
+        }, 400);
+      }
+    });
+  </script>
+</body>
+</html>

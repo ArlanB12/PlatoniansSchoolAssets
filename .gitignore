@@ -1,0 +1,49 @@
+# ============================================================
+# Platonian's School Assets — .gitignore
+# ============================================================
+
+# ── Local DB credentials (NEVER commit) ─────────────────────
+public/api/config.local.php
+
+# ── User uploads (runtime data, not source) ─────────────────
+# Keep the folder + its .htaccess, ignore everything else inside.
+public/uploads/*
+!public/uploads/.htaccess
+
+# ── Database backups / restores ─────────────────────────────
+*.backup.json
+*.bak
+backups/
+*.dump
+*.sql.gz
+
+# ── PHP / Composer ──────────────────────────────────────────
+vendor/
+composer.lock
+
+# ── Node / Playwright (tests) ───────────────────────────────
+node_modules/
+tests/node_modules/
+tests/test-results/
+tests/playwright-report/
+tests/.cache/
+package-lock.json
+
+# ── Logs ────────────────────────────────────────────────────
+*.log
+logs/
+error_log
+
+# ── OS / Editor cruft ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ── Environment ─────────────────────────────────────────────
+.env
+.env.local

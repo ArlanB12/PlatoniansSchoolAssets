@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platonian's School Assets - Lending Policy</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/reset-v10.3.css">
+  <link rel="stylesheet" href="assets/css/v10.4.css">
+  <link rel="stylesheet" href="assets/css/v10.5.css">
+  <link rel="stylesheet" href="assets/css/v10.6.css">
+  <link rel="stylesheet" href="assets/css/v10.7.css">
+  <link rel="stylesheet" href="assets/css/v10.8.css">
+  <link rel="stylesheet" href="assets/css/v10.9.css">
+  <link rel="stylesheet" href="assets/css/v10.10.css">
+  <link rel="stylesheet" href="assets/css/v10.11.css">
+  <link rel="stylesheet" href="assets/css/v10.13.css">
+  <link rel="stylesheet" href="assets/css/v10.14.css">
+  <link rel="stylesheet" href="assets/css/v10.15.css">
+  <link rel="stylesheet" href="assets/css/v10.16.css">
+  <link rel="stylesheet" href="assets/css/v10.17.css">
+  <link rel="stylesheet" href="assets/css/v10.20.css">
+  <link rel="stylesheet" href="assets/css/v10.21.css">
+  <script>
+    // Apply persisted theme BEFORE first paint to avoid a flash of the wrong theme.
+    try {
+      var t = localStorage.getItem('platonian_theme') || 'light';
+      if (t === 'dark') document.documentElement.classList.add('dark');
+    } catch (e) {}
+  </script>
+</head>
+<body data-page="policy">
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img src="assets/img/logo.png" alt="Platonian's School Assets logo" class="site-logo-img">
+        <div class="brand-text">
+          <div class="name">Platonian's School Assets</div>
+          <div class="sub">Inventory System</div>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-avatar" id="sb-avatar">U</div>
+        <div class="user-info">
+          <div class="uname" id="sb-name">User</div>
+          <div class="urole" id="sb-role">Role</div>
+        </div>
+      </div>
+      <div class="nav-section">Navigation</div>
+      <nav id="sidebar-nav"></nav>
+      <div class="sidebar-logout">
+        <button class="logout-btn" id="logout-btn" aria-label="Log out">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" type="button" aria-label="Open menu">&#9776;</button>
+        <div class="topbar-title">
+          <div class="page-name" id="topbar-page">Lending Policy</div>
+          <div class="page-date" id="topbar-date"></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="theme-toggle theme-toggle-topbar" id="theme-toggle-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <svg class="ti-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="ti-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <div class="notif-wrapper">
+          <button class="notif-btn" id="notif-bell-btn" type="button" aria-label="Notifications">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot" id="notif-dot" style="display:none;"></span>
+            <span class="notif-count-badge" id="notif-count-badge" style="display:none;"></span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown" style="display:none;">
+            <div class="notif-header">
+              <span class="notif-header-title">Notifications</span>
+              <button class="notif-mark-all-btn" id="notif-mark-all-btn" type="button">Mark all read</button>
+            </div>
+            <div class="notif-list" id="notif-list"><div class="notif-empty">No notifications yet.</div></div>
+          </div>
+        </div>
+        <div class="topbar-user">
+          <div class="user-avatar" id="tb-avatar">U</div>
+          <div>
+            <div class="ta" id="tb-name">User</div>
+            <div class="tr" id="tb-role">Role</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h1 class="page-title">Lending Policy</h1>
+        <p class="page-subtitle">Configure borrowing rules, reminders, and accountability settings.</p>
+      </div>
+
+      <div id="policy-message" class="status-message" aria-live="polite"></div>
+
+      <!-- Policy Settings Card -->
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-header">
+          <h2 class="card-title">Policy Settings</h2>
+          <p class="card-sub">These settings apply system-wide to all borrowing activities.</p>
+        </div>
+        <div class="card-body">
+          <form id="policy-form" novalidate>
+            <div class="form-grid">
+
+              <div class="form-field">
+                <label for="policy-reminder-days">Early Return Reminder (days before due)</label>
+                <input id="policy-reminder-days" class="field-input" type="number" min="1" max="30" placeholder="e.g. 2">
+                <div class="hint-text">How many days before the due date to send an automatic return reminder.</div>
+              </div>
+
+              <div class="form-field">
+                <label for="policy-max-qty">Default Max Checkout Quantity</label>
+                <input id="policy-max-qty" class="field-input" type="number" min="0" placeholder="e.g. 5 (0 = no default limit)">
+                <div class="hint-text">Per-item limits still override this. Set to 0 for no default limit.</div>
+              </div>
+
+              <div class="form-field form-field-full">
+                <label for="policy-late-fee">Late / Damage Policy Note</label>
+                <textarea id="policy-late-fee" class="field-input" rows="2" placeholder="e.g. Borrower must replace damaged items at cost."></textarea>
+              </div>
+
+              <div class="form-field form-field-full">
+                <label for="policy-note">General Lending Policy Statement</label>
+                <textarea id="policy-note" class="field-input" rows="4" placeholder="Full policy text shown to borrowers..."></textarea>
+                <div class="hint-text">This text is displayed on the borrower's borrow page as the official policy.</div>
+              </div>
+
+            </div>
+
+            <div class="form-actions" style="margin-top:1.5rem;">
+              <button type="submit" class="btn btn-primary" id="policy-save-btn">Save Policy</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Accountability Tiers Card -->
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div class="card-header">
+          <h2 class="card-title">Accountability Tiers</h2>
+          <p class="card-sub">Automatic restrictions applied based on how overdue a borrower's item is.</p>
+        </div>
+        <div class="card-body">
+          <div class="policy-tiers">
+            <div class="tier-row tier-0">
+              <div class="tier-badge">Tier 0</div>
+              <div class="tier-desc"><strong>Clean</strong> — No overdue items. Full borrowing privileges.</div>
+            </div>
+            <div class="tier-row tier-1">
+              <div class="tier-badge">Tier 1</div>
+              <div class="tier-desc"><strong>Warning</strong> (1–2 days overdue) — Login allowed with a warning banner. Can still borrow.</div>
+            </div>
+            <div class="tier-row tier-2">
+              <div class="tier-badge">Tier 2</div>
+              <div class="tier-desc"><strong>Suspended</strong> (3–6 days overdue) — Login allowed but borrow requests are blocked.</div>
+            </div>
+            <div class="tier-row tier-3">
+              <div class="tier-badge">Tier 3</div>
+              <div class="tier-desc"><strong>Restricted</strong> (7–13 days overdue) — Login is blocked. Must return item and contact Administrator.</div>
+            </div>
+            <div class="tier-row tier-4">
+              <div class="tier-badge">Tier 4</div>
+              <div class="tier-desc"><strong>Escalated</strong> (14+ days overdue) — Account locked. Escalation alert sent to all Administrators.</div>
+            </div>
+          </div>
+          <p class="hint-text" style="margin-top:1rem;">Administrators can override a user's tier restriction from the <a href="users.html">Users</a> page.</p>
+        </div>
+      </div>
+
+      <!-- Locked Accounts Card (admin only) -->
+      <div class="card" id="locked-accounts-card">
+        <div class="card-header">
+          <h2 class="card-title">🔒 Locked Accounts</h2>
+          <p class="card-sub">
+            Only accounts that have actually been locked or have failed login attempts on record are shown here.
+            Accounts in good standing do not appear in this list.
+          </p>
+        </div>
+        <div class="card-body">
+          <div id="locked-accounts-list">
+            <p style="color:var(--gray-400);font-size:0.875rem;">Loading…</p>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+    <script src="assets/js/theme.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+  (() => {
+    "use strict";
+
+    function setMsg(msg, type = "success") {
+      const el = document.getElementById("policy-message");
+      if (!el) return;
+      el.textContent = msg;
+      el.className = `status-message ${type}-message ${msg ? "show" : ""}`;
+    }
+
+    async function loadPolicy() {
+      const policy = await window.API.getLendingPolicy();
+      const get = (key, def = "") => (policy[key] ? policy[key].value : def);
+      const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+      setVal("policy-reminder-days",get("early_reminder_days","2"));
+      setVal("policy-max-qty",      get("max_checkout_qty",   "5"));
+      setVal("policy-late-fee",     get("late_fee_note",      ""));
+      setVal("policy-note",         get("policy_note",        ""));
+    }
+
+    // ============================================================
+    // v10.8 — Password Reset Requests moved to users.html
+    // (admin-relevant feature lives in the User Management page).
+    // All inline JS removed; see assets/js/reset-requests.js.
+    // ============================================================
+
+
+    async function loadLockedAccounts() {
+      const listEl = document.getElementById("locked-accounts-list");
+      const cardEl = document.getElementById("locked-accounts-card");
+      if (!listEl) return;
+
+      const user = window.API.getSessionUser();
+      if (!user || user.role !== "admin") {
+        if (cardEl) cardEl.style.display = "none";
+        return;
+      }
+
+      try {
+        // v10.2: only return users actually locked or with failed-login
+        // attempts on record — not the entire users table. This is the
+        // fix for the "admin and custodian show as locked" bug.
+        const locked = await window.API.getLockedAccounts();
+
+        if (!locked.length) {
+          listEl.innerHTML = `
+            <div class="locked-empty">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>No locked accounts. All users are in good standing.</span>
+            </div>`;
+          return;
+        }
+
+        const roleLabel = (r) => r === 'admin' ? 'Administrator' : r === 'custodian' ? 'Property Custodian' : 'Teacher';
+        const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+        listEl.innerHTML = `
+          <table class="data-table locked-accounts-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Failed Attempts</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${locked.map(u => {
+                const status = u.isLocked
+                  ? `<span class="badge badge-locked">🔒 Locked (${u.minsLeft}m left)</span>`
+                  : u.forgotLocked
+                    ? `<span class="badge badge-locked">🔒 Forgot-PW locked</span>`
+                    : `<span class="badge badge-warn">⚠ ${u.failedLogins} fail${u.failedLogins===1?'':'s'}</span>`;
+                return `
+                <tr>
+                  <td><strong>${esc(u.name)}</strong></td>
+                  <td><span class="mono-cell">${esc(u.username)}</span></td>
+                  <td><span class="badge badge-${esc(u.role)}">${esc(roleLabel(u.role))}</span></td>
+                  <td><strong>${u.failedLogins}</strong></td>
+                  <td>${status}</td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" data-unlock="${esc(u.username || u.email)}" type="button">
+                      🔓 Unlock / Reset Failures
+                    </button>
+                  </td>
+                </tr>`;
+              }).join("")}
+            </tbody>
+          </table>`;
+
+        listEl.querySelectorAll("[data-unlock]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const identifier = btn.getAttribute("data-unlock");
+            btn.disabled = true; btn.textContent = "Unlocking…";
+            const res = await window.API.unlockAccount(identifier);
+            if (res.ok) {
+              btn.textContent = "✓ Unlocked";
+              btn.classList.add('btn-success-ghost');
+              // Refresh the list so the row disappears (it's no longer locked)
+              setTimeout(loadLockedAccounts, 900);
+            } else {
+              btn.disabled = false;
+              btn.textContent = "🔓 Unlock / Reset Failures";
+              alert(res.error || "Failed to unlock.");
+            }
+          });
+        });
+      } catch (err) {
+        listEl.innerHTML = '<p class="locked-error">Could not load locked accounts.</p>';
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      if (document.body.dataset.page !== "policy") return;
+      // v10: ensure server session + CSRF token are loaded
+      if (window.API && window.API.bootstrap) await window.API.bootstrap();
+      const user = window.IMS.requireAuth("policy");
+      if (!user) return;
+      window.IMS.initLayout("policy", "Lending Policy");
+
+      await loadPolicy();
+      await loadLockedAccounts();
+
+      document.getElementById("policy-form")?.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector("button[type='submit']");
+        if (btn) { btn.disabled = true; btn.textContent = "Saving…"; }
+        const payload = {
+          early_reminder_days:document.getElementById("policy-reminder-days")?.value.trim(),
+          max_checkout_qty:   document.getElementById("policy-max-qty")?.value.trim(),
+          late_fee_note:      document.getElementById("policy-late-fee")?.value.trim(),
+          policy_note:        document.getElementById("policy-note")?.value.trim(),
+        };
+        const res = await window.API.updateLendingPolicy(payload);
+        if (res.ok) {
+          setMsg("Lending policy saved successfully.", "success");
+        } else {
+          setMsg(res.error || "Failed to save policy.", "error");
+        }
+        if (btn) { btn.disabled = false; btn.textContent = "Save Policy"; }
+      });
+    });
+  })();
+  </script>
+  <script src="assets/js/entry.js"></script>
+  <script src="assets/js/v10.6.js"></script>
+  <script src="assets/js/v10.7.js"></script>
+  <script src="assets/js/v10.9.js"></script>
+  <script src="assets/js/v10.10.js"></script>
+  <script src="assets/js/v10.11.js"></script>
+  <script src="assets/js/v10.14.js"></script>
+  <script src="assets/js/v10.15.js"></script>
+  <script src="assets/js/v10.16.js"></script>
+  <script src="assets/js/v10.17.js"></script>
+  <script src="assets/js/v10.20.js"></script>
+  <script src="assets/js/v10.21.js"></script>
+</body>
+</html>

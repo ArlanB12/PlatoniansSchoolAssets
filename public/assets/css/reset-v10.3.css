@@ -1,0 +1,523 @@
+/* ============================================================
+   v10.3 — Admin-Mediated Password Reset
+   Append this block to the end of styles.css (or include via a
+   separate <link>; the rules are namespaced under .reset-*, .rr-*,
+   .rmodal-*, .forgot-success-*, and .forgot-request-code).
+   ============================================================ */
+
+/* ── Login-page: request submitted success card ─────────── */
+.forgot-success-card {
+  margin-top: 0.5rem;
+  padding: 1.5rem 1.25rem;
+  background: linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 1px solid #86efac;
+  border-radius: 12px;
+  text-align: center;
+  animation: fsCardPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes fsCardPop {
+  0%   { opacity: 0; transform: scale(0.92) translateY(8px); }
+  60%  { opacity: 1; transform: scale(1.02) translateY(0); }
+  100% { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.forgot-success-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 0.85rem;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fsIconRing 0.6s ease-out 0.15s both;
+}
+@keyframes fsIconRing {
+  0%   { box-shadow: 0 0 0 0 rgba(22,163,74,0.45); transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.1); opacity: 1; }
+  100% { box-shadow: 0 0 0 14px rgba(22,163,74,0); transform: scale(1); opacity: 1; }
+}
+
+.forgot-success-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #14532d;
+}
+.forgot-success-line {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.85rem;
+  color: #166534;
+}
+.forgot-request-code {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #0f766e;
+  background: #ffffff;
+  border: 2px dashed #86efac;
+  padding: 0.6rem 1.1rem;
+  border-radius: 9px;
+  margin-bottom: 1rem;
+  animation: fsCodeReveal 0.5s ease-out 0.35s both;
+}
+@keyframes fsCodeReveal {
+  from { opacity: 0; transform: translateY(6px); letter-spacing: 0.04em; }
+  to   { opacity: 1; transform: translateY(0);   letter-spacing: 0.12em; }
+}
+
+.forgot-success-steps {
+  text-align: left;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #bbf7d0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.fss-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  font-size: 0.84rem;
+  color: #374151;
+  line-height: 1.4;
+  animation: fsStepIn 0.4s ease-out both;
+}
+.fss-step:nth-child(1) { animation-delay: 0.45s; }
+.fss-step:nth-child(2) { animation-delay: 0.55s; }
+.fss-step:nth-child(3) { animation-delay: 0.65s; }
+.fss-step:nth-child(4) { animation-delay: 0.75s; }
+@keyframes fsStepIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.fss-num {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Auth info card on the request form ─────────────────── */
+.auth-info-card {
+  margin-top: 1rem;
+  padding: 0.75rem 0.85rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 9px;
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+  color: #1e3a8a;
+  line-height: 1.5;
+}
+.auth-info-card svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #2563eb;
+}
+
+/* ── Character counter under textarea ───────────────────── */
+.field-hint {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.char-count {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.72rem;
+  color: var(--gray-500);
+}
+.char-count-warn { color: #b45309; }
+.char-count-ok   { color: #15803d; }
+.char-count-over { color: #dc2626; font-weight: 600; }
+
+/* ── Step-panel slide animations ────────────────────────── */
+.panel-fade-out { animation: panelFadeOut 0.24s ease-in forwards; }
+.panel-fade-in  { animation: panelFadeIn  0.32s ease-out both; }
+@keyframes panelFadeOut {
+  to { opacity: 0; transform: translateY(-6px); }
+}
+@keyframes panelFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Sign-in button spinner (used while submitting) ─────── */
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: btnSpin 0.7s linear infinite;
+  vertical-align: -2px;
+  margin-right: 0.4rem;
+}
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   ADMIN: Password Reset Request Queue (policy.html)
+   ============================================================ */
+
+.reset-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.reset-tabs {
+  display: flex;
+  gap: 0.3rem;
+  background: var(--gray-100);
+  padding: 0.25rem;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.reset-tab {
+  background: transparent;
+  border: 0;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.reset-tab:hover { color: var(--ink); }
+.reset-tab.active {
+  background: #fff;
+  color: var(--navy);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+html.dark .reset-tabs       { background: var(--surface-2); }
+html.dark .reset-tab.active { background: var(--surface);  color: var(--ink); }
+
+.badge-pending-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 11px;
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-left: 0.5rem;
+  vertical-align: 2px;
+  animation: badgePulse 2.4s ease-in-out infinite;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(220,38,38,0.55); }
+  50%      { box-shadow: 0 0 0 6px rgba(220,38,38,0);    }
+}
+
+/* ── Request card grid ──────────────────────────────────── */
+.reset-request-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.reset-request-card {
+  background: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 1rem 1.1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  position: relative;
+  overflow: hidden;
+  animation: rrCardIn 0.42s ease-out both;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+.reset-request-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -10px rgba(0,0,0,0.12);
+  border-color: #cbd5e1;
+}
+@keyframes rrCardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+html.dark .reset-request-card { background: var(--surface); border-color: var(--border); }
+
+/* Status accent strip on the left edge */
+.reset-request-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--gray-300);
+}
+.reset-request-card.rr-pending::before   { background: linear-gradient(180deg, #f59e0b, #d97706); }
+.reset-request-card.rr-approved::before  { background: linear-gradient(180deg, #22c55e, #16a34a); }
+.reset-request-card.rr-denied::before    { background: linear-gradient(180deg, #ef4444, #dc2626); }
+.reset-request-card.rr-expired::before,
+.reset-request-card.rr-cancelled::before { background: var(--gray-400); }
+
+.rr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.rr-code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gray-500);
+  letter-spacing: 0.06em;
+}
+
+.rr-user {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.rr-avatar {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy), #1e40af);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.rr-name {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.rr-meta {
+  font-size: 0.74rem;
+  color: var(--gray-500);
+  margin-top: 0.15rem;
+  line-height: 1.3;
+}
+
+.rr-reason {
+  background: var(--gray-50, #f9fafb);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+}
+html.dark .rr-reason { background: var(--surface-2); }
+.rr-reason-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--gray-500);
+  margin-bottom: 0.25rem;
+}
+.rr-reason-text {
+  font-size: 0.82rem;
+  color: var(--ink);
+  line-height: 1.45;
+  word-wrap: break-word;
+}
+
+.rr-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.74rem;
+  color: var(--gray-500);
+}
+.rr-age {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  background: var(--gray-100);
+  font-weight: 600;
+}
+.rr-age.age-fresh  { background: #d1fae5; color: #065f46; }
+.rr-age.age-aging  { background: #fef3c7; color: #92400e; }
+.rr-age.age-stale  { background: #fee2e2; color: #991b1b; }
+html.dark .rr-age.age-fresh { background: #064e3b; color: #6ee7b7; }
+html.dark .rr-age.age-aging { background: #422006; color: #fcd34d; }
+html.dark .rr-age.age-stale { background: #4c0519; color: #fca5a5; }
+.rr-ip {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+}
+
+.rr-resolved {
+  font-size: 0.76rem;
+  color: var(--gray-500);
+  padding-top: 0.4rem;
+  border-top: 1px dashed var(--gray-200);
+}
+html.dark .rr-resolved { border-top-color: var(--border); }
+
+.rr-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--gray-100);
+}
+html.dark .rr-actions { border-top-color: var(--border); }
+.rr-actions .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* Generic success/muted badges if not already defined */
+.badge-success { background: #d1fae5; color: #065f46; }
+.badge-muted   { background: var(--gray-100); color: var(--gray-500); }
+html.dark .badge-success { background: #064e3b; color: #6ee7b7; }
+html.dark .badge-muted   { background: var(--surface-2); color: var(--ink-soft); }
+
+/* ============================================================
+   MODAL (approve / deny / reveal password)
+   ============================================================ */
+
+.reset-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.reset-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.22s;
+}
+.reset-modal.reset-modal-open .reset-modal-backdrop { opacity: 1; }
+
+.reset-modal-box {
+  position: relative;
+  background: #fff;
+  border-radius: 14px;
+  max-width: 460px;
+  width: 100%;
+  padding: 1.4rem 1.4rem 1.3rem;
+  box-shadow: 0 20px 50px -12px rgba(0,0,0,0.35);
+  transform: translateY(12px) scale(0.97);
+  opacity: 0;
+  transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.22s;
+}
+.reset-modal.reset-modal-open .reset-modal-box {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+html.dark .reset-modal-box { background: var(--surface); }
+
+.rmodal-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  color: var(--navy);
+}
+.rmodal-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+.rmodal-head-success { color: #16a34a; }
+.rmodal-head-danger  { color: #dc2626; }
+
+.rmodal-sub {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+.rmodal-warn { color: #b45309; font-weight: 600; }
+
+.rmodal-pw-wrap {
+  background: #f0fdf4;
+  border: 2px dashed #86efac;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  margin: 0.5rem 0 0.9rem;
+  text-align: center;
+  animation: rmodalPwPop 0.35s ease-out;
+}
+@keyframes rmodalPwPop {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+html.dark .rmodal-pw-wrap { background: #052e1c; border-color: #14532d; }
+
+.rmodal-pw-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #166534;
+  margin-bottom: 0.4rem;
+}
+.rmodal-pw {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.55rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #0f766e;
+  word-break: break-all;
+  margin-bottom: 0.6rem;
+  user-select: all;
+}
+html.dark .rmodal-pw { color: #99f6e4; }
+
+.rmodal-note {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  font-size: 0.78rem;
+  color: #78350f;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+html.dark .rmodal-note { background: #422006; border-color: #78350f; color: #fcd34d; }
+
+.rmodal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.rmodal-actions .btn { padding: 0.5rem 1rem; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .reset-request-grid { grid-template-columns: 1fr; }
+  .reset-card-header  { flex-direction: column; align-items: stretch; }
+  .reset-tabs         { overflow-x: auto; }
+  .rmodal-pw          { font-size: 1.25rem; }
+}

@@ -1,0 +1,54 @@
+/* ============================================================
+   Platonian's IS — v10.25 styles
+   - FIX: table row alignment on pages whose Actions column is a
+     <td class="action-cell">. That cell was display:flex, which
+     takes the <td> out of normal table layout and breaks vertical
+     alignment with the other columns (Date Added, Status, etc.).
+     On rows where any column wrapped to two lines, the row
+     separator lines stopped lining up across columns.
+   - Fix lives in styles.css (scoped to td.action-cell so it applies
+     site-wide: inventory + pending borrow requests). This file is a
+     safety net for the inventory page's inner wrapper.
+   ============================================================ */
+
+/* Inventory + transactions: the <td> is a real, vertically-centred
+   table cell; the flex button row lives on the inner wrapper. */
+td.action-cell {
+  display: table-cell;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: left;
+}
+
+td.action-cell .action-cell-inner {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* Keep every body cell vertically centred so rows stay level even
+   when one column (a long asset name, a DepEd badge, a file chip)
+   is taller than the rest. */
+#inventory-table tbody td {
+  vertical-align: middle;
+}
+
+/* ── Audit room selector: searchable in the toolbar (v10.25) ─── */
+/* The room-audit-location select becomes a searchable input. In the
+   audit toolbar (an inline flex row) give it a sensible fixed width so
+   it sits neatly next to the Load / Finalize buttons instead of
+   collapsing to its content or stretching full width. */
+.room-audit-toolbar .searchable-select {
+  width: 260px;
+  max-width: 100%;
+}
+.room-audit-toolbar .searchable-select-input {
+  width: 100%;
+}
+/* On narrow screens the toolbar stacks; let the picker go full width. */
+@media (max-width: 640px) {
+  .room-audit-toolbar .searchable-select {
+    width: 100%;
+  }
+}

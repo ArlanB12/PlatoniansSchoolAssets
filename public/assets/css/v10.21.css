@@ -1,0 +1,222 @@
+/* ============================================================
+   Platonian's School Assets - v10.21 styles
+   Loaded LAST (after v10.20). Additive overrides only.
+
+   Fixes:
+     1. "Got it" success-modal button looked oversized - a pale
+        3px focus-ring glow + border made the box read much bigger
+        than the label. Tightened to a clean solid pill.
+     2. LOGIN on mobile + landscape: consolidated into ONE source
+        of truth. Several earlier media queries fought each other
+        (one hid the hero with display:contents, another stacked
+        it, v10.20 kept it). In landscape the card could overflow
+        and clip the Sign In button. This block uses #login-page
+        ID specificity so it always wins, keeps the logo / tagline
+        / yellow text visible, and never clips the card.
+   ============================================================ */
+
+/* ── 1. "GOT IT" SUCCESS BUTTON - RIGHT-SIZED, NO GLOW ─────── */
+/* The success ("Request Submitted!") modal has a single OK button.
+   It was auto-focused, so the focus-visible glow ring from v10.20
+   plus a 1px border made it look like an oversized outlined box.
+   Give it a clean solid teal pill with no enlarging ring. */
+.ims-confirm-actions .btn-primary[data-ims-confirm-ok] {
+  min-width: 0;
+  padding: 0.5rem 1.15rem;
+  font-size: 0.82rem;
+  line-height: 1.1;
+  border-radius: 8px;
+  background: var(--blue-btn, #0d9488);
+  color: #fff;
+  border: 1px solid var(--blue-btn, #0d9488);
+  box-shadow: none;
+}
+.ims-confirm-actions .btn-primary[data-ims-confirm-ok]:hover {
+  background: #0f766e;
+  border-color: #0f766e;
+}
+/* Kill the enlarging glow ring. The button is auto-focused when the
+   modal opens; :focus would show a ring on mere mouse/auto focus and
+   read as an oversized outline. Only :focus-visible (keyboard nav)
+   gets a subtle ring, and it's a tight outline that does not grow the
+   box. */
+.ims-confirm-actions .btn-primary[data-ims-confirm-ok]:focus {
+  outline: none;
+  box-shadow: none;
+}
+.ims-confirm-actions .btn-primary[data-ims-confirm-ok]:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: -3px;
+  box-shadow: none;
+}
+html.dark .ims-confirm-actions .btn-primary[data-ims-confirm-ok] {
+  background: #0d9488;
+  border-color: #0d9488;
+  color: #fff;
+}
+
+/* ── 2. LOGIN LAYOUT - SINGLE SOURCE OF TRUTH ─────────────── */
+
+/* Paint the page background on <html> so a rubber-band scroll on
+   phones never reveals a white/mint strip below the content. */
+@media (max-width: 900px), (orientation: landscape) and (max-height: 600px) {
+  html { background: #0a5c52; }
+}
+
+/* --- PORTRAIT PHONES / NARROW: stacked, hero on top --------- */
+@media (max-width: 760px) and (orientation: portrait) {
+  #login-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: safe center;
+    justify-content: center;
+    padding: 1.25rem 1rem;
+    overflow-y: auto;
+  }
+  #login-page .login-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.1rem;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  /* Keep the hero as a normal block (NOT display:contents, which an
+     earlier layer set and which dropped it from the layout tree). */
+  #login-page .login-left {
+    display: block;
+    width: 100%;
+    text-align: center;
+    max-width: none;
+  }
+  #login-page .login-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.9rem;
+  }
+  #login-page .login-logo .site-logo-img { width: 52px; height: 52px; }
+  #login-page .login-logo-text { text-align: left; }
+  #login-page .login-logo-text h1 { font-size: 1.4rem; line-height: 1.1; }
+  #login-page .login-logo-text p  { font-size: 0.82rem; }
+  #login-page .login-headline {
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: 0.55rem;
+  }
+  /* Yellow tagline stays visible. */
+  #login-page .login-subtext {
+    display: block;
+    text-align: center;
+    max-width: 420px;
+    margin: 0 auto 0.95rem;
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+  /* Stat boxes are the only optional bit - drop them so the card
+     sits above the fold. */
+  #login-page .login-stats { display: none; }
+  #login-page .login-card {
+    width: 100%;
+    padding: 1.4rem 1.2rem;
+  }
+}
+
+/* Very small portrait phones - tighten further. */
+@media (max-width: 480px) and (orientation: portrait) {
+  #login-page { padding: 1rem 0.85rem; }
+  #login-page .login-logo { margin-bottom: 0.75rem; }
+  #login-page .login-headline { font-size: 1.3rem; }
+  #login-page .login-card { padding: 1.3rem 1.1rem; }
+  #login-page .login-card h2 { font-size: 1.3rem; }
+  #login-page .login-card .sub { margin-bottom: 1.1rem; }
+  #login-page .form-group { margin-bottom: 0.95rem; }
+}
+
+/* --- LANDSCAPE PHONES: keep hero beside card, never clip ----- */
+/* Targets any short-and-wide viewport (phone held sideways), no
+   matter the width. The hero stays visible (logo + headline +
+   yellow tagline); only the decorative stat boxes drop. The page
+   scrolls if the card is taller than the viewport so Sign In is
+   never cut off. High ID specificity beats every earlier rule. */
+@media (orientation: landscape) and (max-height: 600px) {
+  #login-page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: safe center;     /* scroll instead of clipping */
+    justify-content: center;
+    padding: 0.9rem 1.1rem;
+    overflow-y: auto;
+  }
+  #login-page .login-container {
+    flex-direction: row;          /* hero beside the card */
+    align-items: center;
+    gap: 1.4rem;
+    max-width: 940px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  /* Hero: visible but compacted to fit the short height. Override
+     the display:contents an earlier layer applied. */
+  #login-page .login-left {
+    display: block;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 440px;
+    width: auto;
+    text-align: left;
+  }
+  #login-page .login-logo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+  }
+  #login-page .login-logo .site-logo-img { width: 42px; height: 42px; }
+  #login-page .login-logo-text { text-align: left; }
+  #login-page .login-logo-text h1 { font-size: 1.2rem; line-height: 1.1; }
+  #login-page .login-logo-text p  { font-size: 0.76rem; }
+  #login-page .login-headline {
+    text-align: left;
+    font-size: 1.3rem;
+    line-height: 1.18;
+    margin-bottom: 0.4rem;
+  }
+  /* Yellow tagline stays. */
+  #login-page .login-subtext {
+    display: block;
+    text-align: left;
+    max-width: none;
+    margin: 0 0 0.7rem;
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
+  #login-page .login-stats { display: none; }
+  #login-page .login-card {
+    flex: 0 0 auto;
+    width: min(360px, 50%);
+    padding: 1.25rem 1.3rem;
+    max-height: none;             /* never crop the card */
+  }
+  #login-page .login-card h2 { font-size: 1.25rem; }
+  #login-page .login-card .sub { margin-bottom: 0.85rem; }
+  #login-page .form-group { margin-bottom: 0.75rem; }
+  #login-page .field-hint { margin-top: 0.2rem; font-size: 0.7rem; }
+}
+
+/* Extremely short landscape (small/older phones): drop the big
+   headline but STILL show logo + yellow tagline, page scrollable. */
+@media (orientation: landscape) and (max-height: 400px) {
+  #login-page .login-container { gap: 1rem; max-width: 820px; }
+  #login-page .login-left { max-width: 360px; }
+  #login-page .login-headline { display: none; }
+  #login-page .login-subtext { margin-bottom: 0.5rem; font-size: 0.78rem; }
+  #login-page .login-card {
+    width: min(340px, 54%);
+    padding: 1.05rem 1.1rem;
+  }
+  #login-page .login-logo { margin-bottom: 0.5rem; }
+}

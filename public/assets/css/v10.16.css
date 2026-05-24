@@ -1,0 +1,185 @@
+/* ============================================================
+   Platonian's School Assets — v10.16 styles
+   Push toggle (Account), Activity Log (Reports), Maintenance
+   (Lending Policy). Reuses the existing theme variables so it
+   inherits dark mode automatically.
+   ============================================================ */
+
+/* ── shared card spacing ─────────────────────────────────── */
+#push-toggle-card,
+#activity-log-card,
+#maintenance-card {
+  margin-top: 1.25rem;
+}
+
+/* ── 1. Device Notifications (Account page) ──────────────── */
+.push-card-desc {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  margin: 0.35rem 0 0.9rem;
+  line-height: 1.5;
+}
+.push-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.push-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.25rem;
+}
+.push-status.on  { color: var(--green, #16a34a); }
+.push-status.off { color: var(--ink-muted); }
+.push-hint {
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+  margin: 0.6rem 0 0;
+  line-height: 1.45;
+}
+
+/* ── 2. Activity Log (Reports page) ──────────────────────── */
+.activity-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+.activity-sub {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0;
+}
+.activity-controls {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.activity-input {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border-input, var(--border));
+  border-radius: var(--radius, 8px);
+  background: var(--surface-input, var(--surface-card));
+  color: var(--ink);
+  font-size: 0.85rem;
+  min-width: 8rem;
+}
+.activity-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft, rgba(13,148,136,0.15));
+}
+.activity-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 8px);
+}
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  min-width: 640px;
+}
+.activity-table thead th {
+  background: var(--surface-table-head, var(--surface-elevated));
+  color: var(--ink-soft);
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.activity-table tbody td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--ink);
+}
+.activity-table tbody tr:last-child td { border-bottom: none; }
+.activity-table tbody tr:hover { background: var(--surface-elevated, rgba(0,0,0,0.02)); }
+
+.act-when { white-space: nowrap; color: var(--ink-muted); font-size: 0.8rem; }
+.act-who { display: flex; flex-direction: column; gap: 0.1rem; }
+.act-name { font-weight: 600; }
+.act-role { color: var(--ink-muted); font-size: 0.72rem; }
+.act-target { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.78rem; }
+.act-details { color: var(--ink-soft); max-width: 26rem; }
+
+.act-badge {
+  display: inline-block;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.act-badge.ok    { background: var(--green-light, #dcfce7);  color: var(--green, #166534); }
+.act-badge.warn  { background: var(--orange-light, #ffedd5); color: var(--orange, #9a3412); }
+.act-badge.muted { background: var(--surface-elevated, #f1f5f9); color: var(--ink-muted, #64748b); }
+.act-badge.info  { background: var(--teal-light, #cffafe);   color: var(--teal, #155e75); }
+
+.activity-empty {
+  text-align: center;
+  color: var(--ink-muted);
+  padding: 1.4rem !important;
+  font-size: 0.85rem;
+}
+.activity-foot {
+  margin-top: 0.6rem;
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+}
+
+/* ── 3. System Maintenance (Lending Policy page) ─────────── */
+.maint-sub {
+  color: var(--ink-muted);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 1rem;
+}
+.maint-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.9rem;
+}
+.maint-tile {
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 8px);
+  padding: 1rem;
+  background: var(--surface-elevated, var(--surface-card));
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.maint-tile h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink-strong, var(--ink));
+}
+.maint-tile p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  flex: 1;
+}
+.maint-tile .btn { align-self: flex-start; }
+.maint-msg {
+  margin: 0.9rem 0 0;
+  font-size: 0.85rem;
+  min-height: 1.2em;
+}
+.maint-msg.ok  { color: var(--green, #16a34a); }
+.maint-msg.err { color: var(--red, #dc2626); }
+
+/* Tighten controls on small screens */
+@media (max-width: 600px) {
+  .activity-head { flex-direction: column; align-items: stretch; }
+  .activity-controls { width: 100%; }
+  .activity-input { flex: 1 1 auto; }
+}
